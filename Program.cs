@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechStock.Data;
+using TechStock.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Registera service för produkter
+builder.Services.AddScoped<ProductService>();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
