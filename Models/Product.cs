@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace TechStock.Models;
 
@@ -9,8 +10,7 @@ public class Product
     public int Id { get; set; }
 
     [Display(Name = "Artikelnummer")]
-    [Required]
-    [StringLength(20)]
+    [ValidateNever] // Ignorera validering för att undvika felmeddelande
     public string ArticleNumber { get; set; } = string.Empty;
 
     [Display(Name = "Produktnamn")]
@@ -29,6 +29,7 @@ public class Product
     public decimal Price { get; set; }
 
     [Display(Name = "Vikt (g)")]
+    [Required(ErrorMessage = "Ange produktens vikt")]
     [Range(0, int.MaxValue, ErrorMessage = "Vikten måste vara större än 0")]
     public int Weight { get; set; }
 
@@ -40,6 +41,7 @@ public class Product
     [Display(Name = "Produktbild")]
     public string? ImageName { get; set; }
 
+    [Display(Name = "Produktbild")]
     [NotMapped] // Sparas inte i databasen utan används för att ladda upp filer
     public IFormFile? ImageFile { get; set; }
 
@@ -49,12 +51,16 @@ public class Product
     public int CategoryId { get; set; } // Främmandenyckel
 
     [Display(Name = "Kategori")]
+    [ValidateNever] // Ignorera validering för att undvika felmeddelande
     public Category Category { get; set; } = null!; // Navigation Property
 
     // Relation till varumärke
     [Display(Name = "Varumärke")]
     [Required(ErrorMessage = "Välj produktens varumärke")]
     public int BrandId { get; set; }
+
+    [Display(Name = "Varumärke")]
+    [ValidateNever] // Ignorera validering för att undvika felmeddelande
     public Brand Brand { get; set; } = null!;
 
     // Datum för skapande och uppdatering
