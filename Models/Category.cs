@@ -7,7 +7,7 @@ public class Category
 {
     public int Id { get; set; }
 
-    [Display(Name = "Kategorinamn")]
+    [Display(Name = "Kategori")]
     [Required(ErrorMessage = "Ange kategorins namn")]
     [StringLength(50, ErrorMessage = "Namnet får vara max 50 tecken")]
     public string Name { get; set; } = string.Empty;
