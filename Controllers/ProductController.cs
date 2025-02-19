@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using TechStock.Data;
 using TechStock.Models;
 using TechStock.Services; // Importera service för produkter
+using X.PagedList.Extensions; // Importera X.PagedList.Extensions för att använda paginering
+
 
 namespace TechStock.Controllers
 {
@@ -27,8 +29,10 @@ namespace TechStock.Controllers
         }
 
         // GET: Product
-        public async Task<IActionResult> Index(string searchString)
+        public IActionResult Index(string searchString, int? page)
         {
+            int pageSize = 10; // Antal produkter per sida
+            int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
             var applicationDbContext = _context.Products.
             Include(p => p.Brand)
@@ -36,7 +40,7 @@ namespace TechStock.Controllers
             .AsQueryable(); // För att kunna filtrera på söksträng
 
             // Kontrollera om söksträngen är tom  
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 // Konvertera söksträngen till gemener
                 searchString = searchString.ToLower();
@@ -45,7 +49,8 @@ namespace TechStock.Controllers
                 applicationDbContext = applicationDbContext.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
             }
 
-            return View(await applicationDbContext.ToListAsync());
+            // Returnera en paginerad lista av produkter och sortera dem efter skapandedatum
+            return View(applicationDbContext.OrderByDescending(p => p.CreatedAt).ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Product/Details/5
