@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TechStock.Data;
 using TechStock.Models;
+using TechStock.Services; // Importera service för produkter
 
 namespace TechStock.Controllers
 {
@@ -14,9 +15,12 @@ namespace TechStock.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductController(ApplicationDbContext context)
+        private readonly ProductService _productService; // Service för produkter
+
+        public ProductController(ApplicationDbContext context, ProductService productService)
         {
             _context = context;
+            _productService = productService;
         }
 
         // GET: Product
@@ -59,10 +63,23 @@ namespace TechStock.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ArticleNumber,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId,CreatedAt,UpdatedAt")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId")] Product product)
         {
+
+            // Generera unikt artikelnummer
+            product.ArticleNumber = await _productService.GenerateArticleNumber();
+
+            if (string.IsNullOrEmpty(product.ArticleNumber))
+            {
+                ModelState.AddModelError("ArticleNumber", "Artikelnummer kunde inte genereras");
+            }
+
             if (ModelState.IsValid)
             {
+                // Sätter CreatedAt och UpdatedAt till aktuellt datum
+                product.CreatedAt = DateTime.Now;
+                product.UpdatedAt = DateTime.Now;
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,7 +112,7 @@ namespace TechStock.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ArticleNumber,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId,CreatedAt,UpdatedAt")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId")] Product product)
         {
             if (id != product.Id)
             {
@@ -106,6 +123,20 @@ namespace TechStock.Controllers
             {
                 try
                 {
+                    // Hämta befintlig produkt från databasen
+                    var existingProduct = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+                    
+                    // Kontrollera om produkten inte finns
+                    if (existingProduct == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Behåll det befintliga artikelnumret, skapandedatum samt uppdatera uppdateringsdatum
+                    product.ArticleNumber = existingProduct.ArticleNumber;
+                    product.CreatedAt = existingProduct.CreatedAt;
+                    product.UpdatedAt = DateTime.Now;
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
