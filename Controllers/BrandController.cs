@@ -34,6 +34,7 @@ namespace TechStock.Controllers
             }
 
             var brand = await _context.Brands
+                .Include(b => b.Products) // Inkludera alla produkter som tillhör varumärket
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (brand == null)
             {
