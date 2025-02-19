@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Identity
+Areas/Identity/Pages/Account
+
 # Temp databse files
 *.db-wal
 *.db-shm
