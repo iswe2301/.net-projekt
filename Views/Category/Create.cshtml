@@ -1,12 +1,12 @@
 @model TechStock.Models.Category
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Lägg till kategori";
 }
 
-<h1>Create</h1>
+<h2>Lägg till</h2>
 
-<h4>Category</h4>
+<h3>Kategori</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,18 +14,18 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" placeholder="Ange kategorinamn" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Lägg till" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka till lista</a>
 </div>
 
 @section Scripts {
