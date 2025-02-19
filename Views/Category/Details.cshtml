@@ -1,24 +1,49 @@
 @model TechStock.Models.Category
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Kategoridetaljer";
 }
 
-<h1>Details</h1>
+<h2>Kategoridetaljer</h2>
+
+<hr />
+
+<h3>Produkter i denna kategori</h3>
+<!-- Kontrollera om det finns några produkter i kategorin och skriv ut dem i en tabell -->
+@if (Model.Products.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Products.First().ArticleNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().StockStatus)</th>
+                <th>Åtgärder</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loopa igenom alla produkter i kategorin -->
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.ArticleNumber</td>
+                    <td>@product.Name</td>
+                    <td>@product.StockStatus</td>
+                    <td>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">Visa</a> |
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">Redigera</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Det finns inga produkter i denna kategori.</p>
+}
 
 <div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Redigera kategori</a> |
+    <a asp-action="Index">Tillbaka till lista</a>
 </div>
