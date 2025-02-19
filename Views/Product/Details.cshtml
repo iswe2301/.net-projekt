@@ -53,7 +53,11 @@
                 @Html.DisplayNameFor(model => model.ImageName)
             </dt>
             <dd class="col-sm-10">
-                <img src="~/images/@Model.ImageName" alt="@Model.Name" />
+                <!-- Länka till bild i ny flik -->
+                <a href="/images/@Html.DisplayFor(model => model.ImageName)" target="_blank">
+                    <img src="/images/@Html.DisplayFor(model => model.ImageName)" alt="@Model.Name"
+                        style="max-width: 200px" />
+                </a>
             </dd>
         }
         <dt class="col-sm-2">
