@@ -1,4 +1,9 @@
-@model IEnumerable<TechStock.Models.Product>
+<!-- Paket för att kunna använda paginering -->
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+<!-- Använd modellen IPagedList för att kunna använda paginering -->
+@model IPagedList<TechStock.Models.Product>
 
 @{
     ViewData["Title"] = "Produkter";
@@ -21,34 +26,36 @@
     </div>
 </form>
 
+<!-- Tabell med alla produkter -->
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StockStatus)
+                @Html.DisplayNameFor(model => model.First().StockStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArticleNumber)
+                @Html.DisplayNameFor(model => model.First().ArticleNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.First().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.First().Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StockQuantity)
+                @Html.DisplayNameFor(model => model.First().StockQuantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.First().Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameFor(model => model.First().Brand)
             </th>
-            <th></th>
+            <th>Åtgärder</th>
         </tr>
     </thead>
     <tbody>
+        <!-- Loopar igenom alla produkter och visar dem i tabellen -->
 @foreach (var item in Model)
 {
                 <tr>
@@ -82,3 +89,32 @@
 }
     </tbody>
 </table>
+
+<!-- Sidräknare ovanför pagineringen -->
+<div class="text-center mb-2">
+    <strong>Sida @Model.PageNumber av @Model.PageCount</strong>
+</div>
+<!-- Paginering -->
+<div class="d-flex justify-content-center mt-3">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = Context.Request.Query["searchString"] }),
+        new PagedListRenderOptions
+        {
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded, // Visa länk till första sidan om det finns fler än 5 sidor
+            DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded, // Visa länk till sista sidan om det finns fler än 5 sidor
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always, // Visa alltid länk till föregående sida
+            DisplayLinkToNextPage = PagedListDisplayMode.Always, // Visa alltid länk till nästa sida
+            MaximumPageNumbersToDisplay = 5, // Max antal sidnummer som visas
+            Display = PagedListDisplayMode.IfNeeded, // Visa paginering om det finns fler än 1 sida
+            
+            // CSS-klasser
+            UlElementClasses = new[] { "pagination" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+
+            // Text för länkar
+            LinkToPreviousPageFormat = "Föregående",
+            LinkToNextPageFormat = "Nästa",
+            LinkToFirstPageFormat = "« Första",
+            LinkToLastPageFormat = "Sista »"
+        })
+</div>
