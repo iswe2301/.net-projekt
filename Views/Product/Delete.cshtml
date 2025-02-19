@@ -46,16 +46,6 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StockQuantity)
         </dd>
-        <!-- Visa bild om det finns en -->
-        @if (Model.ImageName != null)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageName)
-            </dt>
-            <dd class="col-sm-10">
-                <img src="~/images/@Model.ImageName" alt="@Model.Name" />
-            </dd>
-        }
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
