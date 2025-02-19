@@ -70,6 +70,7 @@ public class Product
     [Display(Name = "Senast uppdaterad")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+    [Display(Name = "Lagerstatus")]
     [NotMapped] // Sparas inte i databasen utan beräknas automatiskt
     public string StockStatus => GetStockStatus();
 
