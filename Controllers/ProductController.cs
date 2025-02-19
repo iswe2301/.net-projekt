@@ -27,9 +27,24 @@ namespace TechStock.Controllers
         }
 
         // GET: Product
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
+
+            var applicationDbContext = _context.Products.
+            Include(p => p.Brand)
+            .Include(p => p.Category)
+            .AsQueryable(); // För att kunna filtrera på söksträng
+
+            // Kontrollera om söksträngen är tom  
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Konvertera söksträngen till gemener
+                searchString = searchString.ToLower();
+
+                // Filtrera produkter baserat på söksträngen (namn eller artikelnummer)
+                applicationDbContext = applicationDbContext.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 

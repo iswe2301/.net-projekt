@@ -9,6 +9,18 @@
 <p>
     <a asp-action="Create">Lägg till produkt</a>
 </p>
+
+<!-- Sökfunktion -->
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <!-- Sätter searchString till det som användaren skriver in i sökfältet -->
+        <input type="text" name="searchString" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
+               value="@Context.Request.Query["searchString"]" />
+        <button type="submit" class="btn btn-primary">Sök</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Rensa</a>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -37,35 +49,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArticleNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockQuantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Redigera</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
-            </td>
-        </tr>
+@foreach (var item in Model)
+{
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StockStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ArticleNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StockQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Redigera</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
+                    </td>
+                </tr>
 }
     </tbody>
 </table>
