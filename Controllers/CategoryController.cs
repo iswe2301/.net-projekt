@@ -34,6 +34,7 @@ namespace TechStock.Controllers
             }
 
             var category = await _context.Categories
+                .Include(c => c.Products) // Inkludera alla produkter till kategorin
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
