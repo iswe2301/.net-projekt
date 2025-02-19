@@ -14,13 +14,16 @@ namespace TechStock.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly IWebHostEnvironment _hostEnvironment; // Hosting Environment för att ladda upp filer
+        private readonly string wwwRootPath; // Sökväg till wwwroot-mappen
         private readonly ProductService _productService; // Service för produkter
 
-        public ProductController(ApplicationDbContext context, ProductService productService)
+        public ProductController(ApplicationDbContext context, ProductService productService, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _productService = productService;
+            _hostEnvironment = hostEnvironment;
+            wwwRootPath = hostEnvironment.WebRootPath;
         }
 
         // GET: Product
@@ -63,7 +66,7 @@ namespace TechStock.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageFile,CategoryId,BrandId")] Product product)
         {
 
             // Generera unikt artikelnummer
@@ -76,6 +79,26 @@ namespace TechStock.Controllers
 
             if (ModelState.IsValid)
             {
+                // Kontrollera om en bild har laddats upp
+                if (product.ImageFile != null)
+                {
+                    // Hämta filnamn och filändelse
+                    string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+                    string extension = Path.GetExtension(product.ImageFile.FileName);
+
+                    // Skapa ett unikt filnamn baserat på filnamn och aktuellt datum    
+                    product.ImageName = fileName = fileName.Replace(" ", String.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
+
+                    // Spara filen i wwwroot/images-mappen
+                    string path = Path.Combine(wwwRootPath + "/images/", fileName);
+
+                    // Spara i filsystemet
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await product.ImageFile.CopyToAsync(fileStream);
+                    }
+                }
+
                 // Sätter CreatedAt och UpdatedAt till aktuellt datum
                 product.CreatedAt = DateTime.Now;
                 product.UpdatedAt = DateTime.Now;
@@ -125,7 +148,7 @@ namespace TechStock.Controllers
                 {
                     // Hämta befintlig produkt från databasen
                     var existingProduct = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-                    
+
                     // Kontrollera om produkten inte finns
                     if (existingProduct == null)
                     {
