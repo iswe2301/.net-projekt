@@ -29,12 +29,12 @@ namespace TechStock.Controllers
         }
 
         // GET: Product
-        public IActionResult Index(string searchString, int? page)
+        public IActionResult Index(string searchString, int? page, string sortOrder)
         {
             int pageSize = 10; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
-            var applicationDbContext = _context.Products.
+            var products = _context.Products.
             Include(p => p.Brand)
             .Include(p => p.Category)
             .AsQueryable(); // För att kunna filtrera på söksträng
@@ -46,11 +46,76 @@ namespace TechStock.Controllers
                 searchString = searchString.ToLower();
 
                 // Filtrera produkter baserat på söksträngen (namn eller artikelnummer)
-                applicationDbContext = applicationDbContext.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
+                products = products.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
             }
 
-            // Returnera en paginerad lista av produkter och sortera dem efter skapandedatum
-            return View(applicationDbContext.OrderByDescending(p => p.CreatedAt).ToPagedList(pageNumber, pageSize));
+            // Konvertera produkter till en lista för att kunna sortera
+            var productsList = products.ToList();
+
+            // Aktuell sortering (default är skapandedatum)
+            ViewBag.CurrentSort = sortOrder;
+
+            // Sorteringsalternativ (om aktuell sortering är stigande, ändra till fallande, annars till default)
+            ViewBag.StockStatusSort = sortOrder == "stockstatus_asc" ? "stockstatus_desc" : sortOrder == "stockstatus_desc" ? "" : "stockstatus_asc";
+            ViewBag.ArticleNumberSort = sortOrder == "articlenumber_asc" ? "articlenumber_desc" : sortOrder == "articlenumber_desc" ? "" : "articlenumber_asc";
+            ViewBag.NameSort = sortOrder == "name_asc" ? "name_desc" : sortOrder == "name_desc" ? "" : "name_asc";
+            ViewBag.PriceSort = sortOrder == "price_asc" ? "price_desc" : sortOrder == "price_desc" ? "" : "price_asc";
+            ViewBag.StockQuantitySort = sortOrder == "stockquantity_asc" ? "stockquantity_desc" : sortOrder == "stockquantity_desc" ? "" : "stockquantity_asc";
+            ViewBag.CategorySort = sortOrder == "category_asc" ? "category_desc" : sortOrder == "category_desc" ? "" : "category_asc";
+            ViewBag.BrandSort = sortOrder == "brand_asc" ? "brand_desc" : sortOrder == "brand_desc" ? "" : "brand_asc";
+
+            // Sortera listan baserat på valt sorteringssätt eller skapandedatum (default)
+            switch (sortOrder)
+            {
+                case "stockstatus_desc":
+                    productsList = productsList.OrderByDescending(p => p.StockStatus).ToList();
+                    break;
+                case "stockstatus_asc":
+                    productsList = productsList.OrderBy(p => p.StockStatus).ToList();
+                    break;
+                case "articlenumber_asc":
+                    productsList = productsList.OrderBy(p => p.ArticleNumber).ToList();
+                    break;
+                case "articlenumber_desc":
+                    productsList = productsList.OrderByDescending(p => p.ArticleNumber).ToList();
+                    break;
+                case "name_asc":
+                    productsList = productsList.OrderBy(p => p.Name).ToList();
+                    break;
+                case "name_desc":
+                    productsList = productsList.OrderByDescending(p => p.Name).ToList();
+                    break;
+                case "price_asc":
+                    productsList = productsList.OrderBy(p => p.Price).ToList();
+                    break;
+                case "price_desc":
+                    productsList = productsList.OrderByDescending(p => p.Price).ToList();
+                    break;
+                case "stockquantity_asc":
+                    productsList = productsList.OrderBy(p => p.StockQuantity).ToList();
+                    break;
+                case "stockquantity_desc":
+                    productsList = productsList.OrderByDescending(p => p.StockQuantity).ToList();
+                    break;
+                case "category_asc":
+                    productsList = productsList.OrderBy(p => p.Category.Name).ToList();
+                    break;
+                case "category_desc":
+                    productsList = productsList.OrderByDescending(p => p.Category.Name).ToList();
+                    break;
+                case "brand_asc":
+                    productsList = productsList.OrderBy(p => p.Brand.Name).ToList();
+                    break;
+                case "brand_desc":
+                    productsList = productsList.OrderByDescending(p => p.Brand.Name).ToList();
+                    break;
+                case "":
+                    productsList = productsList.OrderByDescending(p => p.CreatedAt).ToList(); // Återställ standard
+                    break;
+            }
+
+            // Konvertera lista tillbaka till IQueryable för att använda paginering och returnera en paginerad lista
+            return View(productsList.AsQueryable().ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Product/Details/5
