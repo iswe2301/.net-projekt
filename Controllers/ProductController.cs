@@ -31,11 +31,11 @@ namespace TechStock.Controllers
         }
 
         // GET: Product/Home
-        [HttpGet("Home")]
+        [HttpGet("hem")]
         [HttpGet("/")]
         public async Task<IActionResult> Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
-            int pageSize = 10; // Antal produkter per sida
+            int pageSize = 8; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
             // Lagra kategorier och varumärken som har produkter i en lista
@@ -75,7 +75,7 @@ namespace TechStock.Controllers
 
         // GET: Product
         [Authorize] // Kräver att användaren är inloggad
-        [HttpGet("Products")]
+        [HttpGet("produkter")]
         public async Task<IActionResult> Products(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 10; // Antal produkter per sida
@@ -117,7 +117,7 @@ namespace TechStock.Controllers
         }
 
         // GET Product/PublicDetails/5 (publik detaljvy)
-        [HttpGet("Product/{id}")]
+        [HttpGet("produkt/{id}")]
         public async Task<IActionResult> PublicDetails(int id)
         {
             // Hämta produkt inklusive kategori och varumärke
@@ -138,6 +138,7 @@ namespace TechStock.Controllers
 
         // GET: Product/Details/5
         [Authorize] // Kräver att användaren är inloggad
+        [HttpGet("produkt/detaljer/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -159,6 +160,7 @@ namespace TechStock.Controllers
 
         // GET: Product/Create
         [Authorize] // Kräver att användaren är inloggad
+        [HttpGet("produkt/lagg-till")]
         public IActionResult Create()
         {
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
@@ -211,7 +213,7 @@ namespace TechStock.Controllers
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Products));
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", product.BrandId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
@@ -220,6 +222,7 @@ namespace TechStock.Controllers
 
         // GET: Product/Edit/5
         [Authorize] // Kräver att användaren är inloggad
+        [HttpGet("produkt/redigera/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -282,7 +285,7 @@ namespace TechStock.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Products));
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", product.BrandId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
@@ -291,6 +294,7 @@ namespace TechStock.Controllers
 
         // GET: Product/Delete/5
         [Authorize] // Kräver att användaren är inloggad
+        [HttpGet("produkt/radera/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -323,7 +327,7 @@ namespace TechStock.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Products));
         }
 
         private bool ProductExists(int id)
