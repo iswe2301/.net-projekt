@@ -18,7 +18,7 @@
 <!-- Sökfunktion -->
 <form asp-action="Index" method="get" class="mb-3">
     <div class="input-group">
-        <!-- Sätter searchString till det som användaren skriver in i sökfältet -->
+        <!-- Sätt searchString till det som användaren skriver in i sökfältet -->
         <input type="text" name="searchString" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
                value="@Context.Request.Query["searchString"]" />
         <button type="submit" class="btn btn-primary">Sök</button>
@@ -30,26 +30,91 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.First().StockStatus)
+             <th>
+                <!-- Länk för att sortera efter lagerstatus, hämta ordning från ViewBag -->
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.StockStatusSort">
+                    @Html.DisplayNameFor(model => model.First().StockStatus)
+                    <!-- Ändra ikon beroende på vilken sortering som används -->
+                    @if (ViewBag.CurrentSort == "stockstatus_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "stockstatus_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span> // Default-ikon
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().ArticleNumber)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ArticleNumberSort">
+                    @Html.DisplayNameFor(model => model.First().ArticleNumber)
+                    @if (ViewBag.CurrentSort == "articlenumber_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "articlenumber_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Name)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
+                    @Html.DisplayNameFor(model => model.First().Name)
+                    @if (ViewBag.CurrentSort == "name_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "name_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Price)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSort">
+                    @Html.DisplayNameFor(model => model.First().Price)
+                    @if (ViewBag.CurrentSort == "price_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "price_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().StockQuantity)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.StockQuantitySort">
+                    @Html.DisplayNameFor(model => model.First().StockQuantity)
+                    @if (ViewBag.CurrentSort == "stockquantity_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "stockquantity_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Category)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.CategorySort">
+                    @Html.DisplayNameFor(model => model.First().Category.Name)
+                    @if (ViewBag.CurrentSort == "category_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "category_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Brand)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.BrandSort">
+                    @Html.DisplayNameFor(model => model.First().Brand.Name)
+                    @if (ViewBag.CurrentSort == "brand_asc") {
+                        <span>🔼</span>
+                    } else if (ViewBag.CurrentSort == "brand_desc") {
+                        <span>🔽</span>
+                    } else {
+                        <span>↕️</span>
+                    }
+                </a>
             </th>
             <th>Åtgärder</th>
         </tr>
