@@ -35,8 +35,9 @@ namespace TechStock.Controllers
             int pageSize = 10; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
-            // Lagra aktuell sorteringsordning
+            // Lagra aktuella sorterings- och filtreringsvärden
             ViewBag.CurrentSort = sortOrder;
+            ViewBag.CurrentSearch = searchString;
 
             // Hämta produkter inklusive kategori och varumärke
             var products = _context.Products.
@@ -44,15 +45,8 @@ namespace TechStock.Controllers
             .Include(p => p.Category)
             .AsQueryable(); // För att kunna filtrera på söksträng
 
-            // Kontrollera om söksträngen är tom  
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                // Konvertera söksträngen till gemener
-                searchString = searchString.ToLower();
-
-                // Filtrera produkter baserat på söksträngen (namn eller artikelnummer)
-                products = products.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
-            }
+            // Filtrera produkter baserat på söksträng
+            products = FilterProducts(products, searchString);
 
             // Sortera produkter baserat på valt sorteringssätt
             var productList = SortProducts(products, sortOrder);
@@ -304,6 +298,21 @@ namespace TechStock.Controllers
                 default:
                     return productsList.OrderByDescending(p => p.CreatedAt);
             }
+        }
+
+        // Metod för att filtrera produkter baserat på söksträng
+        private IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString)
+        {
+            // Kontrollera om söksträngen är tom
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Konvertera söksträngen till gemener
+                searchString = searchString.ToLower();
+                // Filtrera produkter baserat på söksträngen (namn eller artikelnummer)
+                products = products.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
+            }
+
+            return products; // Returnera filtrerade produkter
         }
     }
 }
