@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TechStock.Data;
 using TechStock.Models;
 using TechStock.Services; // Importera service för produkter
+using X.PagedList;
 using X.PagedList.Extensions; // Importera X.PagedList.Extensions för att använda paginering
 
 
@@ -114,8 +115,8 @@ namespace TechStock.Controllers
                     break;
             }
 
-            // Konvertera lista tillbaka till IQueryable för att använda paginering och returnera en paginerad lista
-            return View(productsList.AsQueryable().ToPagedList(pageNumber, pageSize));
+            // Anropa PaginateProducts för att paginera produkter och returnera till vyn
+            return View(PaginateProducts(products, pageNumber, pageSize));
         }
 
         // GET: Product/Details/5
@@ -304,6 +305,12 @@ namespace TechStock.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);
+        }
+
+        // Metod för att paginera produkter
+        private IPagedList<Product> PaginateProducts(IEnumerable<Product> products, int pageNumber, int pageSize)
+        {
+            return products.ToPagedList(pageNumber, pageSize); // Returnera paginerad lista
         }
     }
 }
