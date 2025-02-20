@@ -22,6 +22,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Brand
+        [HttpGet("Brands")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Brands.ToListAsync());
