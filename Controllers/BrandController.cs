@@ -22,13 +22,14 @@ namespace TechStock.Controllers
         }
 
         // GET: Brand
-        [HttpGet("Brands")]
+        [HttpGet("varumarken")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Brands.ToListAsync());
         }
 
         // GET: Brand/Details/5
+        [HttpGet("varumarke/detaljer/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +49,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Brand/Create
+        [HttpGet("varumarke/lagg-till")]
         public IActionResult Create()
         {
             return View();
@@ -70,6 +72,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Brand/Edit/5
+        [HttpGet("varumarke/redigera/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -121,6 +124,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Brand/Delete/5
+        [HttpGet("varumarke/radera/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

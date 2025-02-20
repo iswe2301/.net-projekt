@@ -22,13 +22,14 @@ namespace TechStock.Controllers
         }
 
         // GET: Category
-        [HttpGet("Categories")]
+        [HttpGet("kategorier")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
         }
 
         // GET: Category/Details/5
+        [HttpGet("kategori/detaljer/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +49,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Category/Create
+        [HttpGet("kategori/lagg-till")]
         public IActionResult Create()
         {
             return View();
@@ -70,6 +72,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Category/Edit/5
+        [HttpGet("kategori/redigera/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -121,6 +124,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Category/Delete/5
+        [HttpGet("kategori/radera/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
