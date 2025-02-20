@@ -261,7 +261,7 @@
 <!-- Paginering -->
 <div class="d-flex justify-content-center mt-3">
     <!-- Skickar med söksträng och filtrering till pagineringen -->
-    @Html.PagedListPager(Model, page => Url.Action("Products", new { page, searchString = Context.Request.Query["searchString"], categoryId = Context.Request.Query["categoryId"], brandId = Context.Request.Query["brandId"], stockStatus = Context.Request.Query["stockStatus"] }),
+    @Html.PagedListPager(Model, page => Url.Action("", "produkter", new { sida = page, searchString = Context.Request.Query["searchString"], categoryId = Context.Request.Query["categoryId"], brandId = Context.Request.Query["brandId"], stockStatus = Context.Request.Query["stockStatus"] }),
         new PagedListRenderOptions
         {
                 DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded, // Visa länk till första sidan om det finns fler än 5 sidor

@@ -33,10 +33,10 @@ namespace TechStock.Controllers
         // GET: Product/Home
         [HttpGet("hem")]
         [HttpGet("/")]
-        public async Task<IActionResult> Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
+        public async Task<IActionResult> Index(string searchString, int? sida, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 8; // Antal produkter per sida
-            int pageNumber = page ?? 1; // Aktuell sida, default är 1
+            int pageNumber = sida ?? 1; // Aktuell sida, default är 1
 
             // Lagra kategorier och varumärken som har produkter i en lista
             ViewData["Categories"] = await _context.Categories
@@ -76,10 +76,10 @@ namespace TechStock.Controllers
         // GET: Product
         [Authorize] // Kräver att användaren är inloggad
         [HttpGet("produkter")]
-        public async Task<IActionResult> Products(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
+        public async Task<IActionResult> Products(string searchString, int? sida, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 10; // Antal produkter per sida
-            int pageNumber = page ?? 1; // Aktuell sida, default är 1
+            int pageNumber = sida ?? 1; // Aktuell sida, default är 1
 
             // Lagra kategorier och varumärken som har produkter i en lista
             ViewData["Categories"] = await _context.Categories
