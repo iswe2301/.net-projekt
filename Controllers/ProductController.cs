@@ -30,29 +30,46 @@ namespace TechStock.Controllers
         }
 
         // GET: Product
-        public IActionResult Index(string searchString, int? page, string sortOrder)
+        public IActionResult Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 10; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
-            // Lagra aktuella sorterings- och filtreringsvärden
+            // Lagra kategorier och varumärken som har produkter i en lista
+            ViewData["Categories"] = _context.Categories
+                .Where(c => _context.Products.Any(p => p.CategoryId == c.Id))
+                .ToList();
+
+            ViewData["Brands"] = _context.Brands
+                .Where(b => _context.Products.Any(p => p.BrandId == b.Id))
+                .ToList();
+
+            // Lagra aktuella filtrerings- och sorteringsvärden
             ViewBag.CurrentSort = sortOrder;
             ViewBag.CurrentSearch = searchString;
-
+            ViewBag.CurrentCategory = categoryId;
+            ViewBag.CurrentBrand = brandId;
+            ViewBag.CurrentStockStatus = stockStatus;
             // Hämta produkter inklusive kategori och varumärke
-            var products = _context.Products.
-            Include(p => p.Brand)
+            var products = _context.Products
+            .Include(p => p.Brand)
             .Include(p => p.Category)
             .AsQueryable(); // För att kunna filtrera på söksträng
 
-            // Filtrera produkter baserat på söksträng
-            products = FilterProducts(products, searchString);
+            // Filtrera produkter baserat på söksträng, kategori, varumärke och lagerstatus
+            products = FilterProducts(products, searchString, categoryId, brandId, stockStatus);
+
+            // Lagra totalt antal produkter efter filtrering
+            ViewBag.TotalProducts = products.Count();
 
             // Sortera produkter baserat på valt sorteringssätt
             var productList = SortProducts(products, sortOrder);
 
-            // Anropa PaginateProducts för att paginera produkter och returnera till vyn
-            return View(PaginateProducts(productList, pageNumber, pageSize));
+            // Paginera produkter
+            var pagedProducts = PaginateProducts(productList, pageNumber, pageSize);
+
+            // Returnera vyn
+            return View(pagedProducts);
         }
 
         // GET: Product/Details/5
@@ -301,9 +318,10 @@ namespace TechStock.Controllers
         }
 
         // Metod för att filtrera produkter baserat på söksträng
-        private IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString)
+        private IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString, int? categoryId, int? brandId, string? stockStatus)
         {
-            // Kontrollera om söksträngen är tom
+
+            // Kontrollera om söksträngen inte är tom
             if (!string.IsNullOrEmpty(searchString))
             {
                 // Konvertera söksträngen till gemener
@@ -312,7 +330,35 @@ namespace TechStock.Controllers
                 products = products.Where(p => p.Name.ToLower().Contains(searchString) || p.ArticleNumber.ToLower().Contains(searchString));
             }
 
-            return products; // Returnera filtrerade produkter
+            // Kontrollera om kategori har valts och filtrera produkter baserat på kategori
+            if (categoryId != null)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+            }
+
+            // Kontrollera om varumärke har valts och filtrera produkter baserat på varumärke
+            if (brandId != null)
+            {
+                products = products.Where(p => p.BrandId == brandId);
+            }
+
+            // Konvertera produkter till en lista för att kunna filtrera på lagerstatus
+            var productList = products.AsEnumerable();
+
+            // Kontrollera om lagerstatus har valts och filtrera produkter baserat på lagerstatus
+            if (!string.IsNullOrEmpty(stockStatus))
+            {
+                productList = stockStatus switch
+                {
+                    "inStock" => productList.Where(p => p.StockQuantity > 10),
+                    "lowStock" => productList.Where(p => p.StockQuantity > 0 && p.StockQuantity <= 10),
+                    "outOfStock" => productList.Where(p => p.StockQuantity == 0),
+                    _ => productList  // Returnera alla produkter om ingen lagerstatus har valts
+                };
+            }
+
+            // Konvertera produkter till en IQueryable för att kunna returnera 
+            return productList.AsQueryable();
         }
     }
 }
