@@ -15,7 +15,6 @@ using X.PagedList.Extensions; // Importera X.PagedList.Extensions för att anvä
 
 namespace TechStock.Controllers
 {
-    [Authorize] // Kräver att användaren är inloggad
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,8 +30,10 @@ namespace TechStock.Controllers
             wwwRootPath = hostEnvironment.WebRootPath;
         }
 
-        // GET: Product
-        public async Task <IActionResult> Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
+        // GET: Product/Home
+        [HttpGet("Home")]
+        [HttpGet("/")]
+        public async Task<IActionResult> Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 10; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
@@ -72,7 +73,71 @@ namespace TechStock.Controllers
             return View(pagedProducts);
         }
 
+        // GET: Product
+        [Authorize] // Kräver att användaren är inloggad
+        [HttpGet("Products")]
+        public async Task<IActionResult> Products(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
+        {
+            int pageSize = 10; // Antal produkter per sida
+            int pageNumber = page ?? 1; // Aktuell sida, default är 1
+
+            // Lagra kategorier och varumärken som har produkter i en lista
+            ViewData["Categories"] = await _context.Categories
+                .Where(c => _context.Products.Any(p => p.CategoryId == c.Id))
+                .ToListAsync();
+
+            ViewData["Brands"] = await _context.Brands
+                .Where(b => _context.Products.Any(p => p.BrandId == b.Id))
+                .ToListAsync();
+
+            // Lagra aktuella filtrerings- och sorteringsvärden
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.CurrentSearch = searchString;
+            ViewBag.CurrentCategory = categoryId;
+            ViewBag.CurrentBrand = brandId;
+            ViewBag.CurrentStockStatus = stockStatus;
+
+            // Hämta produkter inklusive kategori och varumärke
+            var products = _context.Products
+            .Include(p => p.Brand)
+            .Include(p => p.Category)
+            .AsQueryable(); // För att kunna filtrera på söksträng
+
+            // Filtrera produkter baserat på söksträng, kategori, varumärke och lagerstatus
+            products = FilterProducts(products, searchString, categoryId, brandId, stockStatus);
+
+            // Sortera produkter baserat på valt sorteringssätt
+            var productList = SortProducts(products, sortOrder);
+
+            // Paginera produkter
+            var pagedProducts = PaginateProducts(productList, pageNumber, pageSize);
+
+            // Returnera vyn
+            return View(pagedProducts);
+        }
+
+        // GET Product/PublicDetails/5 (publik detaljvy)
+        [HttpGet("Product/{id}")]
+        public async Task<IActionResult> PublicDetails(int id)
+        {
+            // Hämta produkt inklusive kategori och varumärke
+            var product = await _context.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            // Kontrollera om det finns några produkter
+            if (product == null)
+            {
+                return NotFound(); // Returnera 404
+            }
+
+            return View(product); // Returnera vyn med produkterna
+        }
+
+
         // GET: Product/Details/5
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -93,6 +158,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Product/Create
+        [Authorize] // Kräver att användaren är inloggad
         public IActionResult Create()
         {
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
@@ -105,6 +171,7 @@ namespace TechStock.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageFile,CategoryId,BrandId")] Product product)
         {
 
@@ -152,6 +219,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Product/Edit/5
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -174,6 +242,7 @@ namespace TechStock.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId")] Product product)
         {
             if (id != product.Id)
@@ -221,6 +290,7 @@ namespace TechStock.Controllers
         }
 
         // GET: Product/Delete/5
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -243,6 +313,7 @@ namespace TechStock.Controllers
         // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize] // Kräver att användaren är inloggad
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
