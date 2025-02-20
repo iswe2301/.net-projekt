@@ -32,19 +32,19 @@ namespace TechStock.Controllers
         }
 
         // GET: Product
-        public IActionResult Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
+        public async Task <IActionResult> Index(string searchString, int? page, string sortOrder, int? categoryId, int? brandId, string? stockStatus)
         {
             int pageSize = 10; // Antal produkter per sida
             int pageNumber = page ?? 1; // Aktuell sida, default är 1
 
             // Lagra kategorier och varumärken som har produkter i en lista
-            ViewData["Categories"] = _context.Categories
+            ViewData["Categories"] = await _context.Categories
                 .Where(c => _context.Products.Any(p => p.CategoryId == c.Id))
-                .ToList();
+                .ToListAsync();
 
-            ViewData["Brands"] = _context.Brands
+            ViewData["Brands"] = await _context.Brands
                 .Where(b => _context.Products.Any(p => p.BrandId == b.Id))
-                .ToList();
+                .ToListAsync();
 
             // Lagra aktuella filtrerings- och sorteringsvärden
             ViewBag.CurrentSort = sortOrder;
@@ -52,6 +52,7 @@ namespace TechStock.Controllers
             ViewBag.CurrentCategory = categoryId;
             ViewBag.CurrentBrand = brandId;
             ViewBag.CurrentStockStatus = stockStatus;
+
             // Hämta produkter inklusive kategori och varumärke
             var products = _context.Products
             .Include(p => p.Brand)
@@ -60,9 +61,6 @@ namespace TechStock.Controllers
 
             // Filtrera produkter baserat på söksträng, kategori, varumärke och lagerstatus
             products = FilterProducts(products, searchString, categoryId, brandId, stockStatus);
-
-            // Lagra totalt antal produkter efter filtrering
-            ViewBag.TotalProducts = products.Count();
 
             // Sortera produkter baserat på valt sorteringssätt
             var productList = SortProducts(products, sortOrder);
