@@ -15,14 +15,66 @@
     <a asp-action="Create">Lägg till produkt</a>
 </p>
 
-<!-- Sökfunktion -->
-<form asp-action="Index" method="get" class="mb-3">
-    <div class="input-group">
-        <!-- Sätt searchString till det som användaren skriver in i sökfältet -->
-        <input type="text" name="searchString" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
-               value="@Context.Request.Query["searchString"]" />
+<!-- Sök och filtrering inom ett formulär -->
+<form id="filterForm"-- asp-action="Index" method="get" class="mb-3">
+    <div class="input-group mb-3">
+        <!-- Söksträng för produktnamn eller artikelnummer -->
+        <input type="text" name="searchString" id="searchInput" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
+               value="@(ViewBag.CurrentSearch ?? null)" />
         <button type="submit" class="btn btn-primary">Sök</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary">Rensa</a>
+    </div>
+
+    <!-- Filtrering för kategori -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <label for="categoryId">Kategori</label>
+            <select name="categoryId" id="categoryId" class="form-select">
+                <option value="">Alla kategorier</option>
+                <!-- Loopar igenom alla kategorier och skapar en option för varje kategori -->
+                @if (ViewData["Categories"] is List<Category> categories)
+                {
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Id" selected="@(category.Id == ViewBag.CurrentCategory ? "selected" : null)">
+                                @category.Name
+                            </option>
+                    }
+            }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="brandId">Varumärke</label>
+            <select name="brandId" id="brandId" class="form-select">
+                <option value="">Alla varumärken</option>
+                <!-- Loopar igenom alla varumärken och skapar en option för varje varumärke -->
+                @if (ViewData["Brands"] is List<Brand> brands)
+                {
+                        @foreach (var brand in brands)
+                    {
+                            <option value="@brand.Id" selected="@(brand.Id == ViewBag.CurrentBrand ? "selected" : null)">
+                                @brand.Name
+                            </option>
+                    }
+            }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+                <label for="stockStatus">Lagerstatus</label>
+                <select name="stockStatus" id="stockStatus" class="form-select">
+                    <option value="">Alla lagerstatusar</option>
+                    <!-- Skapar en option för varje lagerstatus och sätter selected om det är den aktuella lagerstatusen -->
+                    <option value="inStock" selected="@(ViewBag.CurrentStockStatus == "inStock" ? "selected" : null)">I lager</option>
+                    <option value="lowStock" selected="@(ViewBag.CurrentStockStatus == "lowStock" ? "selected" : null)">Få kvar</option>
+                    <option value="outOfStock" selected="@(ViewBag.CurrentStockStatus == "outOfStock" ? "selected" : null)">Slut i lager</option>
+                </select>
+        </div>
+
+<!-- Återställningsknapp/länk som anropar index-metoden vid klick -->
+        <div class="col-md-3 d-flex align-items-end">
+            <a href="@Url.Action("Index")" class="btn btn-danger ms-3">Återställ filtrering</a>
+        </div>
     </div>
 </form>
 
@@ -35,84 +87,120 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.StockStatusSort">
                     @Html.DisplayNameFor(model => model.First().StockStatus)
                     <!-- Ändra ikon beroende på vilken sortering som används -->
-                    @if (ViewBag.CurrentSort == "stockstatus_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "stockstatus_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span> // Default-ikon
+                    @if (ViewBag.CurrentSort == "stockstatus_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "stockstatus_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
+                            // Default-ikon
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.ArticleNumberSort">
                     @Html.DisplayNameFor(model => model.First().ArticleNumber)
-                    @if (ViewBag.CurrentSort == "articlenumber_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "articlenumber_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "articlenumber_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "articlenumber_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
                     @Html.DisplayNameFor(model => model.First().Name)
-                    @if (ViewBag.CurrentSort == "name_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "name_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "name_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "name_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSort">
                     @Html.DisplayNameFor(model => model.First().Price)
-                    @if (ViewBag.CurrentSort == "price_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "price_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "price_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "price_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.StockQuantitySort">
                     @Html.DisplayNameFor(model => model.First().StockQuantity)
-                    @if (ViewBag.CurrentSort == "stockquantity_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "stockquantity_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "stockquantity_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "stockquantity_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.CategorySort">
                     @Html.DisplayNameFor(model => model.First().Category.Name)
-                    @if (ViewBag.CurrentSort == "category_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "category_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "category_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "category_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.BrandSort">
                     @Html.DisplayNameFor(model => model.First().Brand.Name)
-                    @if (ViewBag.CurrentSort == "brand_asc") {
-                        <span>🔼</span>
-                    } else if (ViewBag.CurrentSort == "brand_desc") {
-                        <span>🔽</span>
-                    } else {
-                        <span>↕️</span>
+                    @if (ViewBag.CurrentSort == "brand_asc")
+                    {
+                            <span>🔼</span>
+                    }
+                    else if (ViewBag.CurrentSort == "brand_desc")
+                    {
+                            <span>🔽</span>
+                    }
+                    else
+                    {
+                            <span>↕️</span>
                     }
                 </a>
             </th>
@@ -120,66 +208,78 @@
         </tr>
     </thead>
     <tbody>
+        <!-- Meddelande om inga produkter hittades -->
+        @if (Model.Count == 0)
+        {
+                <tr>
+                    <td colspan="8" class="text-center">Inga produkter hittades...</td>
+                </tr>
+        }
         <!-- Loopar igenom alla produkter och visar dem i tabellen -->
 @foreach (var item in Model)
 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StockStatus)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ArticleNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StockQuantity)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Brand.Name)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Redigera</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
-                    </td>
-                </tr>
+                    <tr class="product-item" data-name="@item.Name.ToLower()" data-articlenumber="@item.ArticleNumber.ToLower()">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StockStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ArticleNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StockQuantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Brand.Name)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Redigera</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
+                        </td>
+                    </tr>
 }
     </tbody>
 </table>
 
-<!-- Sidräknare ovanför pagineringen -->
-<div class="text-center mb-2">
-    <strong>Sida @Model.PageNumber av @Model.PageCount</strong>
-</div>
+<!-- Sidräknare om det finns minst 1 sida -->
+@if (Model.Count > 0)
+{
+        <div class="text-center mb-2">
+            <strong>Sida @Model.PageNumber av @Model.PageCount</strong>
+        </div>
+}
+
 <!-- Paginering -->
 <div class="d-flex justify-content-center mt-3">
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = Context.Request.Query["searchString"] }),
+    <!-- Skickar med söksträng och filtrering till pagineringen -->
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = Context.Request.Query["searchString"], categoryId = Context.Request.Query["categoryId"], brandId = Context.Request.Query["brandId"], stockStatus = Context.Request.Query["stockStatus"] }),
         new PagedListRenderOptions
         {
-            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded, // Visa länk till första sidan om det finns fler än 5 sidor
-            DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded, // Visa länk till sista sidan om det finns fler än 5 sidor
-            DisplayLinkToPreviousPage = PagedListDisplayMode.Always, // Visa alltid länk till föregående sida
-            DisplayLinkToNextPage = PagedListDisplayMode.Always, // Visa alltid länk till nästa sida
-            MaximumPageNumbersToDisplay = 5, // Max antal sidnummer som visas
-            Display = PagedListDisplayMode.IfNeeded, // Visa paginering om det finns fler än 1 sida
+                DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded, // Visa länk till första sidan om det finns fler än 5 sidor
+                DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded, // Visa länk till sista sidan om det finns fler än 5 sidor
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always, // Visa alltid länk till föregående sida
+                DisplayLinkToNextPage = PagedListDisplayMode.Always, // Visa alltid länk till nästa sida
+                MaximumPageNumbersToDisplay = 5, // Max antal sidnummer som visas
+                Display = PagedListDisplayMode.IfNeeded, // Visa paginering om det finns fler än 1 sida
             
-            // CSS-klasser
-            UlElementClasses = new[] { "pagination" },
-            LiElementClasses = new[] { "page-item" },
-            PageClasses = new[] { "page-link" },
+                // CSS-klasser
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new[] { "page-item" },
+                PageClasses = new[] { "page-link" },
 
-            // Text för länkar
-            LinkToPreviousPageFormat = "Föregående",
-            LinkToNextPageFormat = "Nästa",
-            LinkToFirstPageFormat = "« Första",
-            LinkToLastPageFormat = "Sista »"
+                // Text för länkar
+                LinkToPreviousPageFormat = "Föregående",
+                LinkToNextPageFormat = "Nästa",
+                LinkToFirstPageFormat = "« Första",
+                LinkToLastPageFormat = "Sista »"
         })
 </div>
