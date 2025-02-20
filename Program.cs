@@ -32,6 +32,12 @@ else
     app.UseHsts();
 }
 
+// Aktivera cors
+app.UseCors(builder => builder
+    .AllowAnyOrigin() // Tillåt alla domäner
+    .AllowAnyMethod() // Tillåt alla metoder
+    .AllowAnyHeader()); // Tillåt alla headers
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
