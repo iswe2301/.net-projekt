@@ -4,77 +4,82 @@
     ViewData["Title"] = "Radera produkt";
 }
 
-<h2>Radera produkt</h2>
-<h3>@Model.Name</h3>
-<div>
-    <hr />
-    <h4>Är du säker på att du vill radera denna produkt?</h4>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ArticleNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ArticleNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StockStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StockStatus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StockQuantity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StockQuantity)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Brand)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Brand.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-    </dl>
+<div class="container mt-4">
+    <h2 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Radera produkt</h2>
+    <h3 class="fw-bold">@Model.Name</h3>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Radera" class="btn btn-danger" /> |
-        <a asp-action="Products">Tillbaka till lista</a>
-    </form>
+    <div class="alert alert-danger mt-3 mb-3" role="alert">
+        <h4 class="alert-heading">Är du säker på att du vill raderar denna produkt?</h4>
+        <p>Denna åtgärd kan inte ångras. Om du raderar produkten kommer all information att försvinna.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <!-- Visa produktbild om den finns -->
+            @if (!string.IsNullOrEmpty(Model.ImageName))
+            {
+                <a href="~/images/@Model.ImageName" target="_blank">
+                    <img src="~/images/@Model.ImageName" class="img-fluid rounded w-100"
+                        style="max-height: 500px; object-fit: cover;" alt="@Model.Name">
+                </a>
+            }
+            else
+            {
+                <img src="~/images/placeholder.png" class="img-fluid rounded" alt="Ingen bild tillgänglig">
+            }
+        </div>
+
+        <!-- Visa produktinformation -->
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Artikelnummer:</dt>
+                <dd class="col-sm-8">@Model.ArticleNumber</dd>
+
+                <dt class="col-sm-4">Pris:</dt>
+                <dd class="col-sm-8">@Model.Price.ToString("F2") kr</dd>
+
+                <dt class="col-sm-4">Vikt:</dt>
+                <dd class="col-sm-8">@Model.Weight kg</dd>
+
+                <dt class="col-sm-4">Lagersaldo:</dt>
+                <dd class="col-sm-8">@Model.StockQuantity st</dd>
+
+                <dt class="col-sm-4">Lagerstatus:</dt>
+                <dd class="col-sm-8">
+                    <!-- Lagerstatus visas i olika badges beroende på stockstatus -->
+                    @if (Model.StockStatus == "I lager")
+                    {
+                        <span class="badge bg-success px-3 py-2"><i class="bi bi-check-circle"></i> I lager</span>
+                    }
+                    else if (Model.StockStatus == "Få kvar")
+                    {
+                        <span class="badge bg-warning px-3 py-2"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                    }
+                    else if (Model.StockStatus == "Slut i lager")
+                    {
+                        <span class="badge bg-danger px-3 py-2"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4">Kategori:</dt>
+                <dd class="col-sm-8">@Model.Category?.Name</dd>
+
+                <dt class="col-sm-4">Varumärke:</dt>
+                <dd class="col-sm-8">@Model.Brand?.Name</dd>
+
+                <dt class="col-sm-4">Skapad:</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                <dt class="col-sm-4">Senast uppdaterad:</dt>
+                <dd class="col-sm-8">@Model.UpdatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+            </dl>
+
+            <!-- Knappar försvinna åtgärder -->
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Radera</button>
+                <a asp-action="Products" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Avbryt</a>
+            </form>
+        </div>
+    </div>
 </div>
