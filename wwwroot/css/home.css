@@ -1,0 +1,76 @@
+/* Styling för produktkort */
+.product-card {
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Hover-effekt på produktkort, förstora */
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+/* Bilder i produktkorten */
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hover-effekt på bilder */
+.product-card:hover img {
+  opacity: 0.7;
+}
+
+/* Infotext vid hover (overlay) */
+.product-card .info-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Gör texten synlig vid hover */
+.product-card:hover .info-overlay {
+  opacity: 1;
+}
+
+/* Text i produktkorten */
+.card-body {
+  padding: 1rem;
+}
+
+/* Paginering  */
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.page-item {
+  margin: 0 0.2rem;
+}
+
+.page-link {
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.page-link:hover {
+  background-color: #007bff;
+  color: white;
+}
