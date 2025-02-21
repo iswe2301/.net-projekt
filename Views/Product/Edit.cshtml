@@ -4,66 +4,102 @@
     ViewData["Title"] = "Redigera produkt";
 }
 
-<h2>Redigera</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white text-center">
+                    <h3 class="mb-3">Redigera produkt</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
 
-<h3>Produkt</h3>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <!-- Produktnamn -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Beskrivning -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Pris -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="Price" class="form-label fw-bold"></label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Weight" class="form-label fw-bold"></label>
+                                <input asp-for="Weight" class="form-control" type="number" step="0.01" />
+                                <span asp-validation-for="Weight" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Lagerstatus -->
+                        <div class="mb-3">
+                            <label asp-for="StockQuantity" class="form-label fw-bold"></label>
+                            <input asp-for="StockQuantity" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                        </div>
+
+                        <!-- Bilduppladdning -->
+                        <div class="mb-3 mt-3">
+                            <label asp-for="ImageFile" class="form-label fw-bold"></label>
+                            <!-- Filuppladdning, anropar previewImage-funktionen vid ändring -->
+                            <input asp-for="ImageFile" class="form-control" onchange="previewImage(event)" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            <div class="mt-2 text-center">
+                                <!-- Förhandsvisning av bild om bild valts -->
+                                <img id="image-preview"
+                                    src="@(Model.ImageName != null ? "/images/" + Model.ImageName : "#")"
+                                    class="img-thumbnail d-none" width="150" />
+                            </div>
+                        </div>
+
+                        <!-- Kategori & Varumärke -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label fw-bold"></label>
+                                <select asp-for="CategoryId" class="form-select"
+                                    asp-items="ViewBag.CategoryId"></select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="BrandId" class="form-label fw-bold"></label>
+                                <select asp-for="BrandId" class="form-select" asp-items="ViewBag.BrandId"></select>
+                                <span asp-validation-for="BrandId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Knappar för tillbaka/spara -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Products" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> Tillbaka
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-check-circle"></i> Spara ändringar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" type="number" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StockQuantity" class="control-label"></label>
-                <input asp-for="StockQuantity" class="form-control" />
-                <span asp-validation-for="StockQuantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.BrandId"></select>
-                <span asp-validation-for="BrandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Spara" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Products">Tillbaka till lista</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

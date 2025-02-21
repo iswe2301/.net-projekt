@@ -4,71 +4,105 @@
     ViewData["Title"] = "Lägg till produkt";
 }
 
-<h2>Lägg till</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white text-center">
+                    <h3 class="mb-3">Lägg till produkt</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
 
-<h3>Produkt</h3>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <!-- Tillåt filuppladdning -->
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Ange produktnamn" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <!-- Produktnamn -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Ange produktnamn" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Beskrivning -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"
+                                placeholder="Beskriv produkten..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Pris, vikt och lager -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label asp-for="Price" class="form-label fw-bold"></label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01"
+                                    placeholder="Ange pris" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Weight" class="form-label fw-bold"></label>
+                                <input asp-for="Weight" class="form-control" type="number" step="0.01"
+                                    placeholder="Ange vikt" />
+                                <span asp-validation-for="Weight" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="StockQuantity" class="form-label fw-bold"></label>
+                                <input asp-for="StockQuantity" class="form-control" type="number" min="0"
+                                    placeholder="Antal i lager" />
+                                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Bilduppladdning -->
+                        <div class="mb-3 mt-3">
+                            <label asp-for="ImageFile" class="form-label fw-bold"></label>
+                            <!-- Filuppladdning, anropar previewImage-funktionen vid ändring -->
+                            <input asp-for="ImageFile" class="form-control" accept="image/*"
+                                onchange="previewImage(event)" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            <div class="mt-2 text-center">
+                                <img id="image-preview" class="img-thumbnail d-none" width="150" />
+                            </div>
+                        </div>
+
+                        <!-- Kategori & Varumärke -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label fw-bold"></label>
+                                <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId">
+                                    <option value="">-- Välj kategori --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="BrandId" class="form-label fw-bold"></label>
+                                <select asp-for="BrandId" class="form-select" asp-items="ViewBag.BrandId">
+                                    <option value="">-- Välj varumärke --</option>
+                                </select>
+                                <span asp-validation-for="BrandId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Knappar för bakåt och spara -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Products" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> Tillbaka
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle"></i> Lägg till produkt
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows=5 placeholder="Beskriv produkten..."></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" placeholder="Ange pris" type="number" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" placeholder="Ange vikt" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StockQuantity" class="control-label"></label>
-                <input asp-for="StockQuantity" class="form-control" placeholder="Ange lagerantal" />
-                <span asp-validation-for="StockQuantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <!-- Acceptera endast bildfiler -->
-                <input asp-for="ImageFile" class="form-control" accept="image/*" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId">
-                    <option value="">-- Välj kategori --</option>
-                </select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class ="form-control" asp-items="ViewBag.BrandId">
-                    <option value="">-- Välj varumärke --</option>
-                </select>
-                <span asp-validation-for="BrandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Lägg till produkt" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Products">Tillbaka till lista</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
