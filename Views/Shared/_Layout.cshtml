@@ -1,56 +1,103 @@
 ﻿<!DOCTYPE html>
 <html lang="sv">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TechStock</title>
     <script type="importmap"></script>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- Egen CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechStock.styles.css" asp-append-version="true" />
 </head>
+
 <body>
+    <!-- Navigation -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Product" asp-action="Index"><h1>TechStock</h1></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-xl navbar-dark bg-dark shadow-sm pt-3 w-100">
+            <div class="container-fluid px-3 align-items-start">
+                <!-- Logotyp -->
+                <a class="navbar-brand d-flex align-items-center px-2" asp-area="" asp-controller="Product"
+                    asp-action="Index">
+                    <i class="bi bi-laptop me-2"></i>
+                    <h1 class="h4 mb-0">TechStock</h1>
+                </a>
+
+                <!-- Navbar Toggle (för mobila enheter) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Navbar länkar -->
+                <div class="collapse navbar-collapse justify-content-end align-items-start" id="navbarNav">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Hem</a>
+                            <!-- Navigeringslänkar med kontroll för aktiv sida för länkstyling -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                                asp-area="" asp-controller="Product" asp-action="Index">
+                                <i class="bi bi-house-door"></i> Hem
+                            </a>
                         </li>
-                        <!-- Visa undersidor om användaren är inloggad -->
+                        <!-- Om användaren är inloggad -->
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Products">Produkter</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Kategorier</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Brand" asp-action="Index">Varumärken</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Products" ? "active" : "")"
+                                    asp-area="" asp-controller="Product" asp-action="Products">
+                                    <i class="bi bi-box"></i> Produkter
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                                    asp-area="" asp-controller="Category" asp-action="Index">
+                                    <i class="bi bi-list"></i> Kategorier
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Brand" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                                    asp-area="" asp-controller="Brand" asp-action="Index">
+                                    <i class="bi bi-tags"></i> Varumärken
+                                </a>
+                            </li>
                         }
                     </ul>
-                    <partial name="_LoginPartial" />
+                    <!-- Rendera _LoginPartial  -->
+                    <div class="d-flex flex-column align-items-end">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Rendera huvudinnehåll -->
+    <div class="container my-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container"> &copy; 2025 - TechStock</div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-4">
+        <div class="container">
+            <p class="mb-2">&copy; 2025 - TechStock</p>
+            <p>
+                <i class="bi bi-envelope"></i>
+                <a href="mailto:info@techstock.com" class="text-white">info@techstock.com</a>
+            </p>
+            <div>
+                <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-white me-3"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+            </div>
+        </div>
     </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

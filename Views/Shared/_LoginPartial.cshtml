@@ -2,25 +2,46 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
+<!-- Om användaren är inloggad -->
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Välkommen @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logga ut</button>
-        </form>
-    </li>
+    <ul class="navbar-nav flex-column align-items-end signed-in">
+        <li class="nav-item text-white text-end w-100">
+            <small class="d-block mb-1">
+                <a class="text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Manage/Index"
+                    title="Manage">
+                    <!-- Skriv ut epostadress -->
+                    <i class="bi bi-person-circle"></i> Hej, @User.Identity?.Name!
+                </a>
+            </small>
+        </li>
+        <li class="nav-item mb-2">
+            <!-- Logga ut-funktionalitet med identity  -->
+            <form asp-area="Identity" asp-page="/Account/Logout"
+                asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Logga ut
+                </button>
+            </form>
+        </li>
+    </ul>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Registrera</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Logga in</a>
-    </li>
+    <!-- Om användaren inte är inloggad -->
+    <ul class="navbar-nav d-flex align-items-center">
+        <li class="nav-item">
+            <!-- Länkar till registrering och inloggning med aktiv styling -->
+            <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Register" ? "active" : "")"
+                asp-area="Identity" asp-page="/Account/Register">
+                <i class="bi bi-person-plus"></i> Registrera
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Login" ? "active" : "")"
+                asp-area="Identity" asp-page="/Account/Login">
+                <i class="bi bi-box-arrow-in-right"></i> Logga in
+            </a>
+        </li>
+    </ul>
 }
-</ul>
