@@ -13,7 +13,7 @@
             <!-- Produktbild eller placeholder -->
             @if (!string.IsNullOrEmpty(Model.ImageName))
             {
-                <img src="~/images/@Model.ImageName" class="img-fluid rounded" alt="@Model.Name">
+                <img src="~/images/@Model.ImageName" class="img-fluid rounded w-100" style="max-height: 500px; object-fit: cover;" alt="@Model.Name">
             }
             else
             {
