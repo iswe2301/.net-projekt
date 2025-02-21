@@ -20,21 +20,21 @@ document.addEventListener("DOMContentLoaded", function () {
         // Lägg till händelselyssnare för sökfältet vid input
         searchInput.addEventListener("input", function () {
 
-    // Rensa filtreringen om sökning pågår
-        categorySelect.value = "";
-        brandSelect.value = "";
-        stockStatusSelect.value = "";
-        brandSelect.value = "";
+            // Rensa filtreringen om sökning pågår
+            categorySelect.value = "";
+            brandSelect.value = "";
+            stockStatusSelect.value = "";
+            brandSelect.value = "";
 
-        // Kontrollera om sökfältet är tomt
-        if (searchInput.value.trim() === "") {
-            filterForm.submit(); // Skicka formuläret för att visa alla produkter
+            // Kontrollera om sökfältet är tomt
+            if (searchInput.value.trim() === "") {
+                filterForm.submit(); // Skicka formuläret för att visa alla produkter
             }
-    });
+        });
 
-    // Kontrollera om filtreringselement finns
-    [categorySelect, brandSelect, stockStatusSelect].forEach(element => {
-        if (element) {
+        // Kontrollera om filtreringselement finns
+        [categorySelect, brandSelect, stockStatusSelect].forEach(element => {
+            if (element) {
                 // Lägg till händelselyssnare för filtreringselementen vid ändring
                 element.addEventListener("change", function () {
                     searchInput.value = ""; // Rensa sökfältet
@@ -44,4 +44,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
-    
+
+// Funktion för att förhandsvisa bild
+function previewImage(event) {
+
+    // Hämtar bild-elementet
+    let imagePreview = document.getElementById("image-preview");
+    // Hämtar filen som användaren valt
+    let file = event.target.files[0];
+
+    // Kontrollera om filen finns
+    if (file) {
+        // Skapa en file reader
+        let reader = new FileReader();
+        // När filen är inläst
+        reader.onload = function (e) {
+            // Sätt src-attributet till filens data-url
+            imagePreview.src = e.target.result;
+            // Ta bort klassen för att visa bilden
+            imagePreview.classList.remove("d-none");
+        }
+        reader.readAsDataURL(file); // Läs in filen som en data-url
+    }
+}
