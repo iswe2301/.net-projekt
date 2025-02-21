@@ -11,7 +11,7 @@
 
 <h2>Produkter</h2>
 
-<p>
+<p class="mb-4 mt-4">
     <a asp-action="Create">Lägg till produkt</a>
 </p>
 
@@ -21,12 +21,12 @@
         <!-- Söksträng för produktnamn eller artikelnummer -->
         <input type="text" name="searchString" id="searchInput" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
                value="@(ViewBag.CurrentSearch ?? null)" />
-        <button type="submit" class="btn btn-primary">Sök</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Sök</button>
     </div>
 
     <!-- Filtrering för kategori -->
-    <div class="row mb-4">
-        <div class="col-md-3">
+    <div class="row mb-4 mt-3">
+        <div class="col-md-3 mb-3">
             <label for="categoryId">Kategori</label>
             <select name="categoryId" id="categoryId" class="form-select">
                 <option value="">Alla kategorier</option>
@@ -43,7 +43,7 @@
             </select>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-3 mb-3">
             <label for="brandId">Varumärke</label>
             <select name="brandId" id="brandId" class="form-select">
                 <option value="">Alla varumärken</option>
@@ -60,7 +60,7 @@
             </select>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-3 mb-3">
                 <label for="stockStatus">Lagerstatus</label>
                 <select name="stockStatus" id="stockStatus" class="form-select">
                     <option value="">Alla lagerstatusar</option>
@@ -72,14 +72,15 @@
         </div>
 
 <!-- Återställningsknapp/länk som anropar products-metoden vid klick -->
-        <div class="col-md-3 d-flex align-items-end">
-            <a href="@Url.Action("Products")" class="btn btn-danger ms-3">Återställ filtrering</a>
+        <div class="col-md-3 d-flex align-items-end mb-3 mt-3">
+            <a href="@Url.Action("Index")" class="btn btn-danger w-100"><i class="bi bi-arrow-counterclockwise"></i> Återställ filtrering</a>
         </div>
     </div>
 </form>
 
 <!-- Tabell med alla produkter -->
-<table class="table">
+<div class="table-responsive">
+<table class="table table-striped">
     <thead>
         <tr>
              <th>
@@ -87,121 +88,43 @@
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.StockStatusSort">
                     @Html.DisplayNameFor(model => model.First().StockStatus)
                     <!-- Ändra ikon beroende på vilken sortering som används -->
-                    @if (ViewBag.CurrentSort == "stockstatus_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "stockstatus_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                            // Default-ikon
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "stockstatus_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockstatus_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.ArticleNumberSort">
                     @Html.DisplayNameFor(model => model.First().ArticleNumber)
-                    @if (ViewBag.CurrentSort == "articlenumber_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "articlenumber_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "articlenumber_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "articlenumber_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.NameSort">
                     @Html.DisplayNameFor(model => model.First().Name)
-                    @if (ViewBag.CurrentSort == "name_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "name_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "name_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "name_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.PriceSort">
                     @Html.DisplayNameFor(model => model.First().Price)
-                    @if (ViewBag.CurrentSort == "price_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "price_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "price_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "price_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.StockQuantitySort">
                     @Html.DisplayNameFor(model => model.First().StockQuantity)
-                    @if (ViewBag.CurrentSort == "stockquantity_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "stockquantity_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "stockquantity_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockquantity_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.CategorySort">
                     @Html.DisplayNameFor(model => model.First().Category.Name)
-                    @if (ViewBag.CurrentSort == "category_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "category_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "category_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "category_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.BrandSort">
                     @Html.DisplayNameFor(model => model.First().Brand.Name)
-                    @if (ViewBag.CurrentSort == "brand_asc")
-                    {
-                            <span>🔼</span>
-                    }
-                    else if (ViewBag.CurrentSort == "brand_desc")
-                    {
-                            <span>🔽</span>
-                    }
-                    else
-                    {
-                            <span>↕️</span>
-                    }
+                    <i class="bi @(ViewBag.CurrentSort == "brand_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "brand_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
                 </a>
             </th>
             <th>Åtgärder</th>
@@ -212,12 +135,12 @@
         @if (Model.Count == 0)
         {
                 <tr>
-                    <td colspan="8" class="text-center">Inga produkter hittades...</td>
+                    <td colspan="8" class="text-center mt-4">Inga produkter hittades...</td>
                 </tr>
         }
         <!-- Loopar igenom alla produkter och visar dem i tabellen -->
-@foreach (var item in Model)
-{
+        @foreach (var item in Model)
+        {
                     <tr class="product-item" data-name="@item.Name.ToLower()" data-articlenumber="@item.ArticleNumber.ToLower()">
                         <td>
                             @Html.DisplayFor(modelItem => item.StockStatus)
@@ -241,25 +164,32 @@
                             @Html.DisplayFor(modelItem => item.Brand.Name)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Redigera</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Radera</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-square"></i> Redigera
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                <i class="bi bi-info-circle"></i> Detaljer
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Radera
+                            </a>
                         </td>
                     </tr>
-}
-    </tbody>
+            }
+        </tbody>
 </table>
+</div>
 
 <!-- Sidräknare om det finns minst 1 sida -->
 @if (Model.Count > 0)
 {
-        <div class="text-center mb-2">
+        <div class="text-center mb-4 mt-4">
             <strong>Sida @Model.PageNumber av @Model.PageCount</strong>
         </div>
 }
 
 <!-- Paginering -->
-<div class="d-flex justify-content-center mt-3">
+<div class="d-flex justify-content-center mt-4">
     <!-- Skickar med söksträng och filtrering till pagineringen -->
     @Html.PagedListPager(Model, page => Url.Action("", "produkter", new { sida = page, searchString = Context.Request.Query["searchString"], categoryId = Context.Request.Query["categoryId"], brandId = Context.Request.Query["brandId"], stockStatus = Context.Request.Query["stockStatus"] }),
         new PagedListRenderOptions
@@ -277,9 +207,9 @@
                 PageClasses = new[] { "page-link" },
 
                 // Text för länkar
-                LinkToPreviousPageFormat = "Föregående",
-                LinkToNextPageFormat = "Nästa",
-                LinkToFirstPageFormat = "« Första",
-                LinkToLastPageFormat = "Sista »"
+                LinkToPreviousPageFormat = "<i class='bi bi-chevron-left'></i> Föregående",
+                LinkToNextPageFormat = "Nästa <i class='bi bi-chevron-right'></i>",
+                LinkToFirstPageFormat = "<i class='bi bi-chevron-double-left'></i> Första",
+                LinkToLastPageFormat = "Sista <i class='bi bi-chevron-double-right'></i>"
         })
 </div>
