@@ -58,7 +58,7 @@ namespace TechStock.Controllers
         // POST: Brand/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("varumarke/lagg-till")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Brand brand)
         {
@@ -91,7 +91,7 @@ namespace TechStock.Controllers
         // POST: Brand/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("varumarke/redigera/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Brand brand)
         {
@@ -143,7 +143,7 @@ namespace TechStock.Controllers
         }
 
         // POST: Brand/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("varumarke/radera/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

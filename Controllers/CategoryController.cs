@@ -58,7 +58,7 @@ namespace TechStock.Controllers
         // POST: Category/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("kategori/lagg-till")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
         {
@@ -91,7 +91,7 @@ namespace TechStock.Controllers
         // POST: Category/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("kategori/redigera/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
         {
@@ -143,7 +143,7 @@ namespace TechStock.Controllers
         }
 
         // POST: Category/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("kategori/radera/{id}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
