@@ -4,46 +4,82 @@
     ViewData["Title"] = "Kategoridetaljer";
 }
 
-<h2>Kategoridetaljer</h2>
+<div class="container mt-5">
+    <h2>Kategoridetaljer</h2>
+    <hr>
 
-<hr />
+    <div class="mb-4">
+        <h3><i class="bi bi-tag"></i> @Model.Name</h4>
+    </div>
 
-<h3>Produkter i denna kategori</h3>
-<!-- Kontrollera om det finns några produkter i kategorin och skriv ut dem i en tabell -->
-@if (Model.Products.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Products.First().ArticleNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.Products.First().Name)</th>
-                <th>@Html.DisplayNameFor(model => model.Products.First().StockStatus)</th>
-                <th>Åtgärder</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Loopa igenom alla produkter i kategorin -->
-            @foreach (var product in Model.Products)
-            {
-                <tr>
-                    <td>@product.ArticleNumber</td>
-                    <td>@product.Name</td>
-                    <td>@product.StockStatus</td>
-                    <td>
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">Visa</a> |
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">Redigera</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Det finns inga produkter i denna kategori.</p>
-}
+    <h4 class="mt-4"><i class="bi bi-box-seam"></i> Produkter i denna kategori</h4>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Redigera kategori</a> |
-    <a asp-action="Index">Tillbaka till lista</a>
+<!-- Kontrollera om det finns produkter i kategorin -->
+    @if (Model.Products.Any())
+    {
+        // Skapa en responsiv tabell och skriv ut produkternas rubriker
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Products.First().ArticleNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.Products.First().Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.Products.First().StockStatus)</th>
+                        <th>Åtgärder</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loopa igenom alla produkter och skriv ut dess data -->
+                    @foreach (var product in Model.Products)
+                    {
+                        <tr>
+                            <td>@product.ArticleNumber</td>
+                            <td>@product.Name</td>
+                            <td>
+                                <!-- Kontrollera lagersaldo och skriv ut en badge beroende på status -->
+                                @if (product.StockStatus == "I lager")
+                                {
+                                    <span class="badge bg-success px-3 py-2" style="width: 115px"><i class="bi bi-check-circle"></i> I lager</span>
+                                }
+                                else if (product.StockStatus == "Få kvar")
+                                {
+                                    <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                                }
+                                else if (product.StockStatus == "Slut i lager")
+                                {
+                                    <span class="badge bg-danger px-3 py-2" style="width: 115px"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                                }
+                            </td>
+                            <!-- Åtgärdsknappar för produkterna -->
+                            <td>
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-sm btn-info">
+                                    <i class="bi bi-info-circle"></i> Visa produkt
+                                </a>
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil-square"></i> Redigera produkt
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    // Skriv ut varningsmeddelande om inga produkter finns
+    {
+        <div class="alert alert-warning mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> Det finns inga produkter i denna kategori.
+        </div>
+    }
+
+    <!-- Åtgärdsknappar för kategorin -->
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Tillbaka
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-sm">
+            <i class="bi bi-pencil-square"></i> Redigera kategori
+        </a>
+    </div>
 </div>
