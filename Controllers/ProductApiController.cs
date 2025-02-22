@@ -6,7 +6,7 @@ using TechStock.Models; // Importera modell
 
 namespace TechStock.Controllers
 {
-    [Route("api/products")]
+    [Route("api/produkter")]
     [ApiController]
     // ApiController för att hantera API-anrop, ärver från ControllerBase
     public class ProductApiController : ControllerBase
