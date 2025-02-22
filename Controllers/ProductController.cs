@@ -246,7 +246,7 @@ namespace TechStock.Controllers
         [HttpPost("produkt/redigera/{id}")]
         [ValidateAntiForgeryToken]
         [Authorize] // Kräver att användaren är inloggad
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,CategoryId,BrandId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,Weight,StockQuantity,ImageName,ImageFile,CategoryId,BrandId")] Product product)
         {
             if (id != product.Id)
             {
@@ -270,6 +270,59 @@ namespace TechStock.Controllers
                     product.ArticleNumber = existingProduct.ArticleNumber;
                     product.CreatedAt = existingProduct.CreatedAt;
                     product.UpdatedAt = DateTime.Now;
+
+                    // Kontrollera om det finns en befintlig bild och ingen ny bild har laddats upp
+                    if (string.IsNullOrEmpty(product.ImageName) && !string.IsNullOrEmpty(existingProduct.ImageName))
+                    {
+                        // Hämta den gamla bildens sökväg
+                        string oldImagePath = Path.Combine(wwwRootPath, "images", existingProduct.ImageName);
+
+                        // Kontrollera om filen finns och ta bort den
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                        product.ImageName = null; // Sätt bildnamnet till null
+                    }
+
+                    // Kontrollera om en ny bild har laddats upp
+                    if (product.ImageFile != null)
+                    {
+                        // Ta bort den gamla bilden om den finns
+                        if (!string.IsNullOrEmpty(existingProduct.ImageName))
+                        {
+                            string oldImagePath = Path.Combine(wwwRootPath + "/images/", existingProduct.ImageName);
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        // Skapa ett unikt filnamn för den nya bilden
+                        string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+                        string extension = Path.GetExtension(product.ImageFile.FileName);
+                        product.ImageName = fileName.Replace(" ", string.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
+
+                        // Spara filen i wwwroot/images-mappen
+                        string path = Path.Combine(wwwRootPath + "/images/", product.ImageName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await product.ImageFile.CopyToAsync(fileStream);
+                        }
+                    }
+                    else
+                    {
+                        // Kontrollera om det inte finns någon ny bild och användaren inte vill behålla den gamla bilden
+                        if (product.ImageName == null)
+                        {
+                            product.ImageName = null; // Låt bildnamnet vara null
+                        }
+                        else
+                        // Sätt annars bildnamnet till det befintliga bildnamnet
+                        {
+                            product.ImageName = existingProduct.ImageName;
+                        }
+                    }
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();
