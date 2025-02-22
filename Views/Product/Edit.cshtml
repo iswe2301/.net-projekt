@@ -59,10 +59,10 @@
                             <input asp-for="ImageFile" class="form-control" onchange="previewImage(event)" />
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
                             <div class="mt-2 text-center">
-                                <!-- Förhandsvisning av bild om bild valts -->
+                                <!-- Förhandsvisning av bild om bild valts, visar befintlig bild om ingen ny valts -->
                                 <img id="image-preview"
                                     src="@(Model.ImageName != null ? "/images/" + Model.ImageName : "#")"
-                                    class="img-thumbnail d-none" width="150" />
+                                    class="img-thumbnail @(Model.ImageName != null ? "" : "d-none")" width="150" />
                             </div>
                         </div>
 
