@@ -4,30 +4,43 @@
     ViewData["Title"] = "Lägg till";
 }
 
-<h2>Lägg till</h2>
+<!-- Formulär för att lägga till varumärke -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white text-center">
+                    <h2 class="mb-3 mt-3 h4">Lägg till varumärke</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        @Html.AntiForgeryToken()
 
-<h3>Varumärke</h3>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Ange varumärkesnamn" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <!-- Namn på varumärket -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Ange varumärkesnamn" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Knappar för att spara och gå tillbaka -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> Tillbaka
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle"></i> Lägg till varumärke
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Lägg till" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Tillbaka till lista</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
