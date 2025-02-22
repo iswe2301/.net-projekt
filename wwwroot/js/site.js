@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("categoryId");
     const brandSelect = document.getElementById("brandId");
     const stockStatusSelect = document.getElementById("stockStatus");
+    const existingImage = document.getElementById("existing-image");
+    const removeImageBtn = document.getElementById("remove-image-btn");
 
     // Om formuläret inte finns, avbryt
     if (!filterForm) {
@@ -24,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
             categorySelect.value = "";
             brandSelect.value = "";
             stockStatusSelect.value = "";
-            brandSelect.value = "";
 
             // Kontrollera om sökfältet är tomt
             if (searchInput.value.trim() === "") {
@@ -43,13 +44,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    // Kontrollera om det redan finns en bild och visa "Ta bort bild"-knappen
+    if (existingImage && existingImage.value.trim() !== "") {
+        removeImageBtn.classList.remove("d-none");
+    }
 });
 
 // Funktion för att förhandsvisa bild
 function previewImage(event) {
 
-    // Hämtar bild-elementet
-    let imagePreview = document.getElementById("image-preview");
+    // Hämta element från DOM
+    const imagePreview = document.getElementById("image-preview");
+    const removeImageBtn = document.getElementById("remove-image-btn");
+
     // Hämtar filen som användaren valt
     let file = event.target.files[0];
 
@@ -63,7 +70,32 @@ function previewImage(event) {
             imagePreview.src = e.target.result;
             // Ta bort klassen för att visa bilden
             imagePreview.classList.remove("d-none");
+            // Visa knappen för att ta bort bilden (om knappen finns)
+            if (removeImageBtn) {
+                removeImageBtn.classList.remove("d-none");
+            }
         }
         reader.readAsDataURL(file); // Läs in filen som en data-url
     }
+}
+
+// Funktion för att ta bort bild
+function removeImage() {
+
+    // Hämta element från DOM
+    const imagePreview = document.getElementById("image-preview");
+    const removeImageBtn = document.getElementById("remove-image-btn");
+    const existingImage = document.getElementById("existing-image");
+    const fileInput = document.getElementById("image-file");
+
+    // Återställ till placeholder
+    imagePreview.src = "~/images/placeholder.png";
+    // Rensa input för bild
+    fileInput.value = "";
+    // Dölj bilden
+    existingImage.value = "";
+    // Dölj knappen
+    removeImageBtn.classList.add("d-none");
+    // Dölj bilden
+    imagePreview.classList.add("d-none");
 }
