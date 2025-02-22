@@ -4,24 +4,21 @@
     ViewData["Title"] = "Radera varumärke";
 }
 
-<h2>Radera varumärke</h2>
-<h3>@Model.Name</h3>
+<div class="container mt-4">
+    <!-- Rubrik och namn på varumärket med varningsikon/styling -->
+    <h2 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Radera varumärke</h2>
+    <h3 class="fw-bold">@Model.Name</h3>
 
-<div>
-    <hr />
-    <h4>Är du säker på att du vill radera detta varumärke?</h4>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
+    <!-- Varningstext -->
+    <div class="alert alert-danger mt-3 mb-3" role="alert">
+        <h4 class="alert-heading">Är du säker på att du vill radera detta varumärke?</h4>
+        <p>Denna åtgärd kan inte ångras. Om du raderar varumärket kommer all information att försvinna.</p>
+    </div>
+
+    <!-- Knappar för åtgärder -->
+    <form asp-action="Delete" method="post">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Radera" class="btn btn-danger" /> |
-        <a asp-action="Index">Tillbaka till lista</a>
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Radera</button>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Avbryt</a>
     </form>
 </div>
