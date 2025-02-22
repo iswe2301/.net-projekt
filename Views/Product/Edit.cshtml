@@ -56,13 +56,23 @@
                         <div class="mb-3 mt-3">
                             <label asp-for="ImageFile" class="form-label fw-bold"></label>
                             <!-- Filuppladdning, anropar previewImage-funktionen vid ändring -->
-                            <input asp-for="ImageFile" class="form-control" onchange="previewImage(event)" />
+                            <input asp-for="ImageFile" id="image-file" class="form-control" accept="image/*"
+                                onchange="previewImage(event)" />
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
                             <div class="mt-2 text-center">
-                                <!-- Förhandsvisning av bild om bild valts, visar befintlig bild om ingen ny valts -->
+                                <!-- Visa den befintliga bilden om den finns -->
                                 <img id="image-preview"
-                                    src="@(Model.ImageName != null ? "/images/" + Model.ImageName : "#")"
-                                    class="img-thumbnail @(Model.ImageName != null ? "" : "d-none")" width="150" />
+                                    class="img-thumbnail @(string.IsNullOrEmpty(Model.ImageName) ? "d-none" : "")"
+                                    width="150"
+                                    src="@(string.IsNullOrEmpty(Model.ImageName) ? Url.Content("~/images/placeholder.png") : Url.Content("~/images/" + Model.ImageName))" />
+                                <!-- Dold input för att hantera borttagning av bild -->
+                                <input type="hidden" asp-for="ImageName" id="existing-image" value="@Model.ImageName" />
+                            </div>
+                            <div class="mt-2 text-center">
+                                <!-- Knapp för att ta bort bilden -->
+                                <button type="button" id="remove-image-btn"
+                                    class="btn btn-danger btn-sm mt-2 @(string.IsNullOrEmpty(Model.ImageName) ? "d-none" : "")"
+                                    onclick="removeImage()">Ta bort bild</button>
                             </div>
                         </div>
 
