@@ -12,7 +12,7 @@
 <h2>Produkter</h2>
 
 <p class="mb-4 mt-4">
-    <a asp-action="Create">Lägg till produkt</a>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Lägg till produkt</a>
 </p>
 
 <!-- Sök och filtrering inom ett formulär -->
@@ -142,8 +142,20 @@
         @foreach (var item in Model)
         {
                     <tr class="product-item" data-name="@item.Name.ToLower()" data-articlenumber="@item.ArticleNumber.ToLower()">
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StockStatus)
+                         <td>
+                            <!-- Visa olika badges beroende på lagerstatus -->
+                            @if (item.StockStatus == "I lager")
+                            {
+                                <span class="badge bg-success px-3 py-2" style="width: 115px"><i class="bi bi-check-circle"></i> I lager</span>
+                            }
+                            else if (item.StockStatus == "Få kvar")
+                            {
+                                <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                            }
+                            else if (item.StockStatus == "Slut i lager")
+                            {
+                                <span class="badge bg-danger px-3 py-2" style="width: 115px"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ArticleNumber)
