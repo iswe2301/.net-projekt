@@ -12,22 +12,19 @@ using TechStock.Services; // Importera service för produkter
 using X.PagedList;
 using X.PagedList.Extensions; // Importera X.PagedList.Extensions för att använda paginering
 
-
 namespace TechStock.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _hostEnvironment; // Hosting Environment för att ladda upp filer
-        private readonly string wwwRootPath; // Sökväg till wwwroot-mappen
+        private readonly AzureBlobService _azureBlobService; // Service för Azure Blob Storage
         private readonly ProductService _productService; // Service för produkter
 
-        public ProductController(ApplicationDbContext context, ProductService productService, IWebHostEnvironment hostEnvironment)
+        public ProductController(ApplicationDbContext context, AzureBlobService azureBlobService, ProductService productService)
         {
             _context = context;
             _productService = productService;
-            _hostEnvironment = hostEnvironment;
-            wwwRootPath = hostEnvironment.WebRootPath;
+            _azureBlobService = azureBlobService;
         }
 
         // GET: Product/Home
@@ -195,15 +192,12 @@ namespace TechStock.Controllers
                     string extension = Path.GetExtension(product.ImageFile.FileName);
 
                     // Skapa ett unikt filnamn baserat på filnamn och aktuellt datum    
-                    product.ImageName = fileName = fileName.Replace(" ", String.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
+                    string uniqueFileName = fileName.Replace(" ", String.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
 
-                    // Spara filen i wwwroot/images-mappen
-                    string path = Path.Combine(wwwRootPath + "/images/", fileName);
-
-                    // Spara i filsystemet
-                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    // Ladda upp bilden till Azure Blob Storage och få URL:en tillbaka
+                    using (var stream = product.ImageFile.OpenReadStream())
                     {
-                        await product.ImageFile.CopyToAsync(fileStream);
+                        product.ImageName = await _azureBlobService.UploadFileAsync(stream, uniqueFileName);
                     }
                 }
 
@@ -274,40 +268,30 @@ namespace TechStock.Controllers
                     // Kontrollera om det finns en befintlig bild och ingen ny bild har laddats upp
                     if (string.IsNullOrEmpty(product.ImageName) && !string.IsNullOrEmpty(existingProduct.ImageName))
                     {
-                        // Hämta den gamla bildens sökväg
-                        string oldImagePath = Path.Combine(wwwRootPath, "images", existingProduct.ImageName);
-
-                        // Kontrollera om filen finns och ta bort den
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
+                        // Ta bort den gamla bilden från Azure Blob Storage
+                        await _azureBlobService.DeleteFileAsync(existingProduct.ImageName);
                         product.ImageName = null; // Sätt bildnamnet till null
                     }
 
                     // Kontrollera om en ny bild har laddats upp
                     if (product.ImageFile != null)
                     {
-                        // Ta bort den gamla bilden om den finns
+                        // Kontrollera om det finns en befintlig bild
                         if (!string.IsNullOrEmpty(existingProduct.ImageName))
                         {
-                            string oldImagePath = Path.Combine(wwwRootPath + "/images/", existingProduct.ImageName);
-                            if (System.IO.File.Exists(oldImagePath))
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
+                            // Ta bort den gamla bilden från Azure Blob Storage
+                            await _azureBlobService.DeleteFileAsync(existingProduct.ImageName);
                         }
 
                         // Skapa ett unikt filnamn för den nya bilden
                         string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
                         string extension = Path.GetExtension(product.ImageFile.FileName);
-                        product.ImageName = fileName.Replace(" ", string.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
+                        string uniqueFileName = fileName.Replace(" ", string.Empty) + DateTime.Now.ToString("_yyyy-MM-dd-HHmmssfff") + extension;
 
-                        // Spara filen i wwwroot/images-mappen
-                        string path = Path.Combine(wwwRootPath + "/images/", product.ImageName);
-                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        // Ladda upp den nya bilden till Azure Blob Storage och få URL:en tillbaka
+                        using (var stream = product.ImageFile.OpenReadStream())
                         {
-                            await product.ImageFile.CopyToAsync(fileStream);
+                            product.ImageName = await _azureBlobService.UploadFileAsync(stream, uniqueFileName);
                         }
                     }
                     else
@@ -376,6 +360,14 @@ namespace TechStock.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
+                // Om produkten har en bild, ta bort den från Azure Blob Storage
+                if (!string.IsNullOrEmpty(product.ImageName))
+                {
+                    Uri uri = new Uri(product.ImageName);
+                    string fileName = Path.GetFileName(uri.LocalPath);
+                    await _azureBlobService.DeleteFileAsync(fileName);
+                }
+                
                 _context.Products.Remove(product);
             }
 
