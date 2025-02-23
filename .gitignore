@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Appsettings
+appsettings.json
+
 # Identity
 Areas/Identity/Pages/Account
 
