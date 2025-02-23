@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-4">
-    <h2 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Radera produkt</h2>
+    <h2 class="text-danger"><em class="bi bi-exclamation-triangle"></em> Radera produkt</h2>
     <h3 class="fw-bold">@Model.Name</h3>
 
     <div class="alert alert-danger mt-3 mb-3" role="alert">
@@ -49,15 +49,15 @@
                     <!-- Lagerstatus visas i olika badges beroende på stockstatus -->
                     @if (Model.StockStatus == "I lager")
                     {
-                        <span class="badge bg-success px-3 py-2"><i class="bi bi-check-circle"></i> I lager</span>
+                        <span class="badge bg-success px-3 py-2"><em class="bi bi-check-circle"></em> I lager</span>
                     }
                     else if (Model.StockStatus == "Få kvar")
                     {
-                        <span class="badge bg-warning px-3 py-2"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                        <span class="badge bg-warning px-3 py-2"><em class="bi bi-exclamation-circle"></em> Få kvar</span>
                     }
                     else if (Model.StockStatus == "Slut i lager")
                     {
-                        <span class="badge bg-danger px-3 py-2"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                        <span class="badge bg-danger px-3 py-2"><em class="bi bi-x-circle"></em> Slut i lager</span>
                     }
                 </dd>
 
@@ -77,8 +77,8 @@
             <!-- Knappar försvinna åtgärder -->
             <form asp-action="Delete" method="post">
                 <input type="hidden" asp-for="Id" />
-                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Radera</button>
-                <a asp-action="Products" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Avbryt</a>
+                <button type="submit" class="btn btn-danger"><em class="bi bi-trash"></em> Radera</button>
+                <a asp-action="Products" class="btn btn-outline-secondary"><em class="bi bi-x-circle"></em> Avbryt</a>
             </form>
         </div>
     </div>

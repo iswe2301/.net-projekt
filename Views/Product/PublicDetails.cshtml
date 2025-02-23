@@ -25,17 +25,17 @@
             <!-- Lagerstatus visas som en badge beroende på status -->
             @if (Model.StockStatus == "I lager")
             {
-                <p class="mb-3"><span class="badge bg-success px-3 py-2"><i class="bi bi-check-circle"></i> I
+                <p class="mb-3"><span class="badge bg-success px-3 py-2"><em class="bi bi-check-circle"></em> I
                         lager</span></p>
             }
             else if (Model.StockStatus == "Få kvar")
             {
-                <p class="mb-3"><span class="badge bg-warning px-3 py-2 text-dark"><i class="bi bi-exclamation-circle"></i> Få
+                <p class="mb-3"><span class="badge bg-warning px-3 py-2 text-dark"><em class="bi bi-exclamation-circle"></em> Få
                         kvar</span></p>
             }
             else if (Model.StockStatus == "Slut i lager")
             {
-                <p class="mb-3"><span class="badge bg-danger px-3 py-2"><i class="bi bi-x-circle"></i> Slut i
+                <p class="mb-3"><span class="badge bg-danger px-3 py-2"><em class="bi bi-x-circle"></em> Slut i
                         lager</span></p>
             }
             <p><strong>Pris:</strong> @Model.Price.ToString("F2") kr</p>
@@ -45,7 +45,7 @@
             <p>@Model.Description</p>
 
             <!-- Tillbaka-knapp/länk -->
-            <a asp-action="index" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Tillbaka till startsida</a>
+            <a asp-action="index" class="btn btn-secondary mt-3"><em class="bi bi-arrow-left"></em> Tillbaka till startsida</a>
         </div>
     </div>
 </div>

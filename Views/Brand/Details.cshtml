@@ -9,10 +9,10 @@
     <hr>
 
     <div class="mb-4">
-        <h3><i class="bi bi-tag"></i> @Model.Name</h3>
+        <h3><em class="bi bi-tag"></em> @Model.Name</h3>
     </div>
 
-    <h4 class="mt-4"><i class="bi bi-box-seam"></i> Produkter med detta varumärke</h4>
+    <h4 class="mt-4"><em class="bi bi-box-seam"></em> Produkter med detta varumärke</h4>
 
 <!-- Kontrollera om det finns produkter med varumärket -->
     @if (Model.Products.Any())
@@ -39,24 +39,24 @@
                                 <!-- Kontrollera lagersaldo och skriv ut en badge beroende på status -->
                                 @if (product.StockStatus == "I lager")
                                 {
-                                    <span class="badge bg-success px-3 py-2" style="width: 115px"><i class="bi bi-check-circle"></i> I lager</span>
+                                    <span class="badge bg-success px-3 py-2" style="width: 115px"><em class="bi bi-check-circle"></em> I lager</span>
                                 }
                                 else if (product.StockStatus == "Få kvar")
                                 {
-                                    <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                                    <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><em class="bi bi-exclamation-circle"></em> Få kvar</span>
                                 }
                                 else if (product.StockStatus == "Slut i lager")
                                 {
-                                    <span class="badge bg-danger px-3 py-2" style="width: 115px"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                                    <span class="badge bg-danger px-3 py-2" style="width: 115px"><em class="bi bi-x-circle"></em> Slut i lager</span>
                                 }
                             </td>
                             <!-- Åtgärdsknappar för produkterna -->
                             <td>
                                 <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-sm btn-info">
-                                    <i class="bi bi-info-circle"></i> Visa produkt
+                                    <em class="bi bi-info-circle"></em> Visa produkt
                                 </a>
                                 <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Redigera produkt
+                                    <em class="bi bi-pencil-square"></em> Redigera produkt
                                 </a>
                             </td>
                         </tr>
@@ -69,17 +69,17 @@
     // Skriv ut varningsmeddelande om inga produkter finns
     {
         <div class="alert alert-warning mt-3" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> Det finns inga produkter med detta varumärke.
+            <em class="bi bi-exclamation-triangle"></em> Det finns inga produkter med detta varumärke.
         </div>
     }
 
     <!-- Åtgärdsknappar för varumärket -->
     <div class="d-flex justify-content-between mt-4">
         <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left"></i> Tillbaka
+            <em class="bi bi-arrow-left"></em> Tillbaka
         </a>
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary btn-sm">
-            <i class="bi bi-pencil-square"></i> Redigera varumärke
+            <em class="bi bi-pencil-square"></em> Redigera varumärke
         </a>
     </div>
 </div>

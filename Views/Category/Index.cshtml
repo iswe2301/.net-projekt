@@ -7,7 +7,7 @@
 <h2>Kategorier</h2>
 
 <p class="mb-4 mt-4">
-    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Lägg till kategori</a>
+    <a asp-action="Create" class="btn btn-primary"><em class="bi bi-plus-lg"></em> Lägg till kategori</a>
 </p>
 
 <!-- Tabell med alla kategorier -->
@@ -31,13 +31,13 @@
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                            <i class="bi bi-pencil-square"></i> Redigera
+                            <em class="bi bi-pencil-square"></em> Redigera
                         </a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
-                            <i class="bi bi-info-circle"></i> Detaljer
+                            <em class="bi bi-info-circle"></em> Detaljer
                         </a>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash"></i> Radera
+                            <em class="bi bi-trash"></em> Radera
                         </a>
                     </td>
                 </tr>

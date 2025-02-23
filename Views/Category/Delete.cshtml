@@ -6,7 +6,7 @@
 
 <div class="container mt-4">
     <!-- Rubrik och namn på kategorin med varningsikon/styling -->
-    <h2 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Radera kategori</h2>
+    <h2 class="text-danger"><em class="bi bi-exclamation-triangle"></em> Radera kategori</h2>
     <h3 class="fw-bold">@Model.Name</h3>
 
     <!-- Varningstext -->
@@ -18,7 +18,7 @@
     <!-- Knappar för åtgärder -->
     <form asp-action="Delete" method="post">
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Radera</button>
-        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Avbryt</a>
+        <button type="submit" class="btn btn-danger"><em class="bi bi-trash"></em> Radera</button>
+        <a asp-action="Index" class="btn btn-outline-secondary"><em class="bi bi-x-circle"></em> Avbryt</a>
     </form>
 </div>

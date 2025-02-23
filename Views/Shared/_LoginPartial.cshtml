@@ -11,7 +11,7 @@
                 <a class="text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Manage/Index"
                     title="Manage">
                     <!-- Skriv ut epostadress -->
-                    <i class="bi bi-person-circle"></i> Hej, @User.Identity?.Name!
+                    <em class="bi bi-person-circle"></em> Hej, @User.Identity?.Name!
                 </a>
             </small>
         </li>
@@ -20,7 +20,7 @@
             <form asp-area="Identity" asp-page="/Account/Logout"
                 asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Logga ut
+                    <em class="bi bi-box-arrow-right"></em> Logga ut
                 </button>
             </form>
         </li>
@@ -34,13 +34,13 @@ else
             <!-- Länkar till registrering och inloggning med aktiv styling -->
             <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Register" ? "active" : "")"
                 asp-area="Identity" asp-page="/Account/Register">
-                <i class="bi bi-person-plus"></i> Registrera
+                <em class="bi bi-person-plus"></em> Registrera
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Login" ? "active" : "")"
                 asp-area="Identity" asp-page="/Account/Login">
-                <i class="bi bi-box-arrow-in-right"></i> Logga in
+                <em class="bi bi-box-arrow-in-right"></em> Logga in
             </a>
         </li>
     </ul>

@@ -22,7 +22,7 @@
                 <!-- Logotyp -->
                 <a class="navbar-brand d-flex align-items-center px-2" asp-area="" asp-controller="Product"
                     asp-action="Index">
-                    <i class="bi bi-laptop me-2"></i>
+                    <em class="bi bi-laptop me-2"></em>
                     <h1 class="h4 mb-0">TechStock</h1>
                 </a>
 
@@ -39,7 +39,7 @@
                             <!-- Navigeringslänkar med kontroll för aktiv sida för länkstyling -->
                             <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
                                 asp-area="" asp-controller="Product" asp-action="Index">
-                                <i class="bi bi-house-door"></i> Hem
+                                <em class="bi bi-house-door"></em> Hem
                             </a>
                         </li>
                         <!-- Om användaren är inloggad -->
@@ -48,19 +48,19 @@
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" && ViewContext.RouteData.Values["Action"]?.ToString() == "Products" ? "active" : "")"
                                     asp-area="" asp-controller="Product" asp-action="Products">
-                                    <i class="bi bi-box"></i> Produkter
+                                    <em class="bi bi-box"></em> Produkter
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
                                     asp-area="" asp-controller="Category" asp-action="Index">
-                                    <i class="bi bi-list"></i> Kategorier
+                                    <em class="bi bi-list"></em> Kategorier
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Brand" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
                                     asp-area="" asp-controller="Brand" asp-action="Index">
-                                    <i class="bi bi-tags"></i> Varumärken
+                                    <em class="bi bi-tags"></em> Varumärken
                                 </a>
                             </li>
                         }
@@ -86,20 +86,30 @@
         <div class="container">
             <p class="mb-2">&copy; 2025 - TechStock</p>
             <p>
-                <i class="bi bi-envelope"></i>
+                <em class="bi bi-envelope"></em>
                 <a href="mailto:info@techstock.com" class="text-white">info@techstock.com</a>
             </p>
             <div>
-                <a href="https://iswe2301-techstock.azurewebsites.net/" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-                <a href="https://iswe2301-techstock.azurewebsites.net/" class="text-white me-3"><i class="bi bi-twitter-x"></i></a>
-                <a href="https://iswe2301-techstock.azurewebsites.net/" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+                <a href="https://iswe2301-techstock.azurewebsites.net/" class="text-white me-3"
+                    aria-label="Besök vår hemsida">
+                    <em class="bi bi-facebook"></em>
+                </a>
+
+                <a href="https://twitter.com/" class="text-white me-3" aria-label="Besök vår Twitter-sida">
+                    <em class="bi bi-twitter"></em>
+                </a>
+
+                <a href="https://instagram.com/" class="text-white me-3" aria-label="Besök vår Instagram-sida">
+                    <em class="bi bi-instagram"></em>
+                </a>
             </div>
         </div>
     </footer>
-    
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

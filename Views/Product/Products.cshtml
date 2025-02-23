@@ -12,7 +12,7 @@
 <h2>Produkter</h2>
 
 <p class="mb-4 mt-4">
-    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Lägg till produkt</a>
+    <a asp-action="Create" class="btn btn-primary"><em class="bi bi-plus-lg"></em> Lägg till produkt</a>
 </p>
 
 <!-- Sök och filtrering inom ett formulär -->
@@ -22,7 +22,7 @@
         <label for="searchInput" class="visually-hidden">Sök</label>
         <input type="text" name="searchString" id="searchInput" class="form-control" placeholder="Sök efter produktnamn eller artikelnummer..."
                value="@(ViewBag.CurrentSearch ?? null)" />
-        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Sök</button>
+        <button type="submit" class="btn btn-primary"><em class="bi bi-search"></em> Sök</button>
     </div>
 
     <!-- Filtrering för kategori -->
@@ -74,7 +74,7 @@
 
 <!-- Återställningsknapp/länk som anropar products-metoden vid klick -->
         <div class="col-md-3 d-flex align-items-end mb-3 mt-3">
-            <a href="@Url.Action("Index")" class="btn btn-danger w-100"><i class="bi bi-arrow-counterclockwise"></i> Återställ filtrering</a>
+            <a href="@Url.Action("Index")" class="btn btn-danger w-100"><em class="bi bi-arrow-counterclockwise"></em> Återställ filtrering</a>
         </div>
     </div>
 </form>
@@ -89,43 +89,43 @@
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.StockStatusSort">
                     @Html.DisplayNameFor(model => model.First().StockStatus)
                     <!-- Ändra ikon beroende på vilken sortering som används -->
-                    <i class="bi @(ViewBag.CurrentSort == "stockstatus_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockstatus_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "stockstatus_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockstatus_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.ArticleNumberSort">
                     @Html.DisplayNameFor(model => model.First().ArticleNumber)
-                    <i class="bi @(ViewBag.CurrentSort == "articlenumber_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "articlenumber_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "articlenumber_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "articlenumber_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.NameSort">
                     @Html.DisplayNameFor(model => model.First().Name)
-                    <i class="bi @(ViewBag.CurrentSort == "name_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "name_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "name_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "name_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.PriceSort">
                     @Html.DisplayNameFor(model => model.First().Price)
-                    <i class="bi @(ViewBag.CurrentSort == "price_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "price_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "price_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "price_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.StockQuantitySort">
                     @Html.DisplayNameFor(model => model.First().StockQuantity)
-                    <i class="bi @(ViewBag.CurrentSort == "stockquantity_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockquantity_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "stockquantity_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "stockquantity_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.CategorySort">
                     @Html.DisplayNameFor(model => model.First().Category.Name)
-                    <i class="bi @(ViewBag.CurrentSort == "category_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "category_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "category_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "category_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>
                 <a asp-action="Products" asp-route-sortOrder="@ViewBag.BrandSort">
                     @Html.DisplayNameFor(model => model.First().Brand.Name)
-                    <i class="bi @(ViewBag.CurrentSort == "brand_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "brand_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></i>
+                    <em class="bi @(ViewBag.CurrentSort == "brand_asc" ? "bi-arrow-up" : ViewBag.CurrentSort == "brand_desc" ? "bi-arrow-down" : "bi-arrow-down-up")"></em>
                 </a>
             </th>
             <th>Åtgärder</th>
@@ -147,15 +147,15 @@
                             <!-- Visa olika badges beroende på lagerstatus -->
                             @if (item.StockStatus == "I lager")
                             {
-                                <span class="badge bg-success px-3 py-2" style="width: 115px"><i class="bi bi-check-circle"></i> I lager</span>
+                                <span class="badge bg-success px-3 py-2" style="width: 115px"><em class="bi bi-check-circle"></em> I lager</span>
                             }
                             else if (item.StockStatus == "Få kvar")
                             {
-                                <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><i class="bi bi-exclamation-circle"></i> Få kvar</span>
+                                <span class="badge bg-warning px-3 py-2 text-dark" style="width: 115px"><em class="bi bi-exclamation-circle"></em> Få kvar</span>
                             }
                             else if (item.StockStatus == "Slut i lager")
                             {
-                                <span class="badge bg-danger px-3 py-2" style="width: 115px"><i class="bi bi-x-circle"></i> Slut i lager</span>
+                                <span class="badge bg-danger px-3 py-2" style="width: 115px"><em class="bi bi-x-circle"></em> Slut i lager</span>
                             }
                         </td>
                         <td>
@@ -178,13 +178,13 @@
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil-square"></i> Redigera
+                                <em class="bi bi-pencil-square"></em> Redigera
                             </a>
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
-                                <i class="bi bi-info-circle"></i> Detaljer
+                                <em class="bi bi-info-circle"></em> Detaljer
                             </a>
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i> Radera
+                                <em class="bi bi-trash"></em> Radera
                             </a>
                         </td>
                     </tr>
@@ -220,9 +220,9 @@
                 PageClasses = new[] { "page-link" },
 
                 // Text för länkar
-                LinkToPreviousPageFormat = "<i class='bi bi-chevron-left'></i> Föregående",
-                LinkToNextPageFormat = "Nästa <i class='bi bi-chevron-right'></i>",
-                LinkToFirstPageFormat = "<i class='bi bi-chevron-double-left'></i> Första",
-                LinkToLastPageFormat = "Sista <i class='bi bi-chevron-double-right'></i>"
+                LinkToPreviousPageFormat = "<em class='bi bi-chevron-left'></em> Föregående",
+                LinkToNextPageFormat = "Nästa <em class='bi bi-chevron-right'></em>",
+                LinkToFirstPageFormat = "<em class='bi bi-chevron-double-left'></em> Första",
+                LinkToLastPageFormat = "Sista <em class='bi bi-chevron-double-right'></em>"
         })
 </div>
