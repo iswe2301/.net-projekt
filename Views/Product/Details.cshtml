@@ -12,14 +12,14 @@
             <!-- Produktbild eller placeholder -->
             @if (!string.IsNullOrEmpty(Model.ImageName))
             {
-                <a href="~/images/@Model.ImageName" target="_blank">
-                    <img src="~/images/@Model.ImageName" class="img-fluid rounded w-100"
+                <a href="@Model.ImageName" target="_blank">
+                    <img src="@Model.ImageName" class="img-fluid rounded w-100"
                         style="max-height: 500px; object-fit: cover;" alt="@Model.Name">
                 </a>
             }
             else
             {
-                <img src="~/images/placeholder.png" class="img-fluid rounded" alt="Ingen bild tillgänglig">
+                <img src="https://iswe2301images.blob.core.windows.net/product-images/placeholder.png" class="img-fluid rounded" alt="Ingen bild tillgänglig">
             }
         </div>
 

@@ -13,6 +13,7 @@
 <form id="filterForm" asp-action="Index" method="get" class="mb-4 mt-4">
     <div class="input-group mb-3">
         <!-- Söksträng för produktnamn eller artikelnummer -->
+        <label for="searchInput" class="visually-hidden">Sök</label>
         <input type="text" name="searchString" id="searchInput" class="form-control"
             placeholder="Sök efter produktnamn eller artikelnummer..." value="@(ViewBag.CurrentSearch ?? null)" />
         <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Sök</button>
@@ -93,12 +94,12 @@
                         <!-- Produktbild visas om det finns någon -->
                         @if (!string.IsNullOrEmpty(product.ImageName))
                         {
-                            <img src="~/images/@product.ImageName" class="card-img-top" alt="@product.Name">
+                            <img src="@product.ImageName" class="card-img-top" alt="@product.Name">
                         }
                         // Annars visas en placeholder-bild
                         else
                         {
-                        <img src="~/images/placeholder.png" class="card-img-top" alt="Ingen bild tillgängling">
+                        <img src="https://iswe2301images.blob.core.windows.net/product-images/placeholder.png" class="card-img-top" alt="Ingen bild tillgänglig">
                         }
                         <div class="info-overlay"><i class="bi bi-eye"></i> Visa produkt</div>
                     </div>
