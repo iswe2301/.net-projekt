@@ -86,10 +86,10 @@ function removeImage() {
     const imagePreview = document.getElementById("image-preview");
     const removeImageBtn = document.getElementById("remove-image-btn");
     const existingImage = document.getElementById("existing-image");
-    const fileInput = document.getElementById("image-file");
+    const fileInput = document.getElementById("ImageFile");
 
     // Återställ till placeholder
-    imagePreview.src = "~/images/placeholder.png";
+    imagePreview.src = "https://iswe2301images.blob.core.windows.net/product-images/placeholder.png";
     // Rensa input för bild
     fileInput.value = "";
     // Dölj bilden
