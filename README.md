@@ -1,5 +1,5 @@
 # TechStock
-TechStock är en webbapplikation skapad för att hantera produkter och lagersaldo i en fiktiv teknikbutik. Applikationen är byggd med **ASP.NET Core MVC** som backend-ramverk och använder **Entity Framework Core** för databasinteraktion. Frontend-delen är byggd med **Razor Pages** och **Bootstrap** för styling.
+TechStock är en webbapplikation skapad för att hantera produkter och lagersaldo i en fiktiv teknikbutik. Applikationen är byggd med **ASP.NET Core MVC** som backend-ramverk/frontend-rendering och använder **Entity Framework Core** för databasinteraktion. Frontend-delen är byggd med **Razor Views (MVC)** och **Bootstrap** för styling.
 
 Projektet är utvecklat som en del i kursen DT191G Webbutveckling med .NET, Mittuniversitetet.
 
@@ -12,10 +12,10 @@ Projektet är utvecklat som en del i kursen DT191G Webbutveckling med .NET, Mitt
 - Responsivt användargränssnitt anpassat för både stora och små enheter.
 
 ## Teknologier
-- **ASP.NET Core MVC** för backend-logik.
+- **ASP.NET Core MVC**  för backend-logik och frontend-rendering.
 - **Entity Framework Core** för databasinteraktion.
 - **SQLite** för databaslagring.
-- **Razor Pages** för frontend-logik.
+- **Razor Views (MVC)** för frontend-logik.
 - **Bootstrap** för styling och användargränssnitt.
 - **X.PagedList** för paginering.
 - **Azure** för publicering.
