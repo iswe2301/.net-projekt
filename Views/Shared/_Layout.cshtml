@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <!-- Egen CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ced4da">
 </head>
 
 <body>
@@ -90,8 +93,7 @@
                 <a href="mailto:info@techstock.com" class="text-white">info@techstock.com</a>
             </p>
             <div>
-                <a href="https://facebook.com/" class="text-white me-3"
-                    aria-label="Besök vår hemsida">
+                <a href="https://facebook.com/" class="text-white me-3" aria-label="Besök vår hemsida">
                     <em class="bi bi-facebook"></em>
                 </a>
 
@@ -109,6 +111,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- PWA -->
+    <script src="/js/pwa.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
