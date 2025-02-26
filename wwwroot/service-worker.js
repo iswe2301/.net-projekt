@@ -1,5 +1,5 @@
 // Service Worker för PWA
-const cacheName = "techstock-cache-v1";
+const cacheName = "techstock-cache-v2";
 
 // Statiska resurser att cacha
 const resourcesToCache = [
@@ -31,13 +31,16 @@ self.addEventListener("activate", event => {
 
 // Hämta resurser från cache om de finns, annars från nätverket
 self.addEventListener("fetch", event => {
+    // Ignorera POST-förfrågningar helt så att inga dubbla anrop sker 
+    if (event.request.method === "POST") {
+        return;
+    }
+    // Ignorera navigeringsförfrågningar (HTML-sidor) så att inloggningsstatus alltid är aktuell
+    if (event.request.mode === "navigate") {
+        return;
+    }
     // Ignorera icke-HTTP requests
     if (!event.request.url.startsWith("http")) return;
-
-    // Exkludera HTML-sidor från cache (för att alltid hämta ny inloggningsstatus)
-    if (event.request.mode === "navigate") {
-        return fetch(event.request);
-    }
 
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
@@ -45,8 +48,8 @@ self.addEventListener("fetch", event => {
 
             return fetch(event.request).then(response => {
                 return caches.open(cacheName).then(cache => {
-                    // Cacha endast giltiga resurser, inte HTML
-                    if (response.ok && response.type === "basic") {
+                    // Cacha endast statiska resurser (inte HTML eller POST)
+                    if (response.ok && response.type === "basic" && event.request.method === "GET") {
                         cache.put(event.request, response.clone());
                     }
                     return response;
