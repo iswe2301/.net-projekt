@@ -360,18 +360,25 @@ namespace TechStock.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                // Om produkten har en bild, ta bort den från Azure Blob Storage
+                // Kontrollera om produkten har en bild
                 if (!string.IsNullOrEmpty(product.ImageName))
                 {
-                    Uri uri = new Uri(product.ImageName);
-                    string fileName = Path.GetFileName(uri.LocalPath);
-                    await _azureBlobService.DeleteFileAsync(fileName);
+                    try
+                    {
+                        // Anropa metoden för att radera filen från Azure Blob Storage
+                        await _azureBlobService.DeleteFileAsync(product.ImageName);
+                    }
+                    // Fånga upp eventuella undantag
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Fel vid radering av bild: {ex.Message}");
+                    }
                 }
-                
+
                 _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Products));
         }
 

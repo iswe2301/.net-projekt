@@ -48,17 +48,41 @@ public class AzureBlobService
     }
 
     // Metod för att radera en fil
-    public async Task DeleteFileAsync(string fileUrl)
+    public async Task DeleteFileAsync(string fileName)
     {
-        // Skapa en referens till containern
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        // Kontrollera att filnamnet inte är tomt
+        if (string.IsNullOrEmpty(fileName))
+        {
+            Console.WriteLine("Ingen bild att radera.");
+            return;
+        }
 
-        // Hämta filnamnet från URL:en
-        Uri uri = new Uri(fileUrl);
-        string fileName = Path.GetFileName(uri.LocalPath);
+        try
+        {
+            // Skapa en referens till containern
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            // Hämta filen från containern
+            var blobClient = containerClient.GetBlobClient(fileName);
 
-        // Skapa en referens till bloben och radera den
-        var blobClient = containerClient.GetBlobClient(fileName);
-        await blobClient.DeleteIfExistsAsync();
+            // Kontrollera om filen finns
+            if (await blobClient.ExistsAsync())
+            {
+                // Radera filen
+                await blobClient.DeleteIfExistsAsync();
+                Console.WriteLine($"Bild raderad: {fileName}");
+            }
+            else
+            {
+                // Skriv ut felmeddelande om filen inte hittades
+                Console.WriteLine($"Bilden hittades inte i Azure: {fileName}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Skriv ut felmeddelande om något gick fel
+            Console.WriteLine($"Fel vid radering av bild: {ex.Message}");
+            throw;
+        }
     }
+
 }
