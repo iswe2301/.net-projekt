@@ -10,6 +10,8 @@ Projektet är utvecklat som en del i kursen DT191G Webbutveckling med .NET, Mitt
 - Paginering av produktlistor.
 - Inloggning och utloggning med ASP.NET Identity.
 - Responsivt användargränssnitt anpassat för både stora och små enheter.
+- PWA för nedladdning på lokal enhet.
+- REST API (GET) för hämtning av produkter.
 
 ## Teknologier
 - **ASP.NET Core MVC**  för backend-logik och frontend-rendering.
