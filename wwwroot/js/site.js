@@ -12,37 +12,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const existingImage = document.getElementById("existing-image");
     const removeImageBtn = document.getElementById("remove-image-btn");
 
-    // Om formuläret inte finns, avbryt
-    if (!filterForm) {
-        return;
-    }
+    // Kontrollera om formuläret finns
+    if (filterForm) {
+        // Kontrollera om sökfältet finns
+        if (searchInput) {
+            // Lägg till händelselyssnare för sökfältet vid input
+            searchInput.addEventListener("input", function () {
 
-    // Kontrollera om sökfältet finns
-    if (searchInput) {
-        // Lägg till händelselyssnare för sökfältet vid input
-        searchInput.addEventListener("input", function () {
+                // Rensa filtreringen om sökning pågår
+                categorySelect.value = "";
+                brandSelect.value = "";
+                stockStatusSelect.value = "";
 
-            // Rensa filtreringen om sökning pågår
-            categorySelect.value = "";
-            brandSelect.value = "";
-            stockStatusSelect.value = "";
+                // Kontrollera om sökfältet är tomt
+                if (searchInput.value.trim() === "") {
+                    filterForm.submit(); // Skicka formuläret för att visa alla produkter
+                }
+            });
 
-            // Kontrollera om sökfältet är tomt
-            if (searchInput.value.trim() === "") {
-                filterForm.submit(); // Skicka formuläret för att visa alla produkter
-            }
-        });
-
-        // Kontrollera om filtreringselement finns
-        [categorySelect, brandSelect, stockStatusSelect].forEach(element => {
-            if (element) {
-                // Lägg till händelselyssnare för filtreringselementen vid ändring
-                element.addEventListener("change", function () {
-                    searchInput.value = ""; // Rensa sökfältet
-                    filterForm.submit(); // Skicka formuläret
-                });
-            }
-        });
+            // Kontrollera om filtreringselement finns
+            [categorySelect, brandSelect, stockStatusSelect].forEach(element => {
+                if (element) {
+                    // Lägg till händelselyssnare för filtreringselementen vid ändring
+                    element.addEventListener("change", function () {
+                        searchInput.value = ""; // Rensa sökfältet
+                        filterForm.submit(); // Skicka formuläret
+                    });
+                }
+            });
+        }
     }
     // Kontrollera om det redan finns en bild och visa "Ta bort bild"-knappen
     if (existingImage && existingImage.value.trim() !== "") {
